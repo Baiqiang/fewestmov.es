@@ -1,0 +1,27 @@
+{
+  "server": {
+    "host": "localhost",
+    "port": 3000
+  },
+  "auth": {
+    "client_id": "BHRDKfu7CguB9D9ijTtoZV67A46m2mQ0VMEZhe-h1ak",
+    "client_secret": "",
+    "token_endpoint": "https://www.worldcubeassociation.org/oauth/token",
+    "authorization_endpoint": "https://www.worldcubeassociation.org/oauth/authorize",
+    "userinfo_endpoint": "https://www.worldcubeassociation.org/api/v0/me",
+    "scope": [
+      "public",
+      "email"
+    ],
+    "response_type": "code",
+    "token_type": "Bearer"
+  },
+  "session": {
+    "secret": "blabla",
+    "resave": false,
+    "saveUninitialized": true,
+    "cookie": {
+      "maxAge": 604800000
+    }
+  }
+}
