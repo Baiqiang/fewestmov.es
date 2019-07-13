@@ -6,6 +6,7 @@
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
+        <b-nav-item to="/if" :active="$route.name && $route.name.slice(0, 2) === 'if'">{{ $t('if.title') }}</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto align-items-center">
         <b-nav-item-dropdown :text="currentLanguage" right>
@@ -14,8 +15,9 @@
         <b-nav-item to="/login" v-if="!$auth.loggedIn">{{ $t('header.login') }}</b-nav-item>
         <b-nav-item-dropdown right no-caret v-if="$auth.loggedIn">
           <template slot="button-content">
-            <b-img class="avatar" fluid :src="$auth.user.avatar.thumb_url" :alt="$auth.user.name"></b-img>
+            <b-img class="avatar" fluid :src="$auth.user.avatarThumb" :alt="$auth.user.name"></b-img>
           </template>
+          <b-dropdown-item to="/user/insertions" >{{ $t('user.insertions') }}</b-dropdown-item>
           <b-dropdown-item to="/logout" >{{ $t('header.logout') }}</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
@@ -24,6 +26,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   data() {
     return {
@@ -38,10 +42,12 @@ export default {
   methods: {
     switchLocale(code) {
       this.$cookies.set('locale', code, {
+        path: '/',
         maxAge: 86400 * 365
       })
       this.$store.commit('SET_LANG', code)
-      location.reload()
+      this.$i18n.locale = code
+      moment.locale(code)
     }
   }
 }
@@ -50,6 +56,7 @@ export default {
 <style lang="less">
 header {
   height: 60px;
+  z-index: 99;
 }
 img.avatar {
   width: 32px;

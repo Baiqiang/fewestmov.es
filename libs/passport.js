@@ -9,7 +9,7 @@ const server = config.get('server')
 class WCAOAuth2Strategy extends OAuth2Strategy {
   async userProfile(token, done) {
     try {
-      const profile = (await axios.get(auth.userinfo_endpoint, {
+      const profile = (await axios.get(auth.userinfoUrl, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -21,7 +21,6 @@ class WCAOAuth2Strategy extends OAuth2Strategy {
   }
 }
 
-
 passport.serializeUser((user, done) => {
   done(null, user)
 })
@@ -30,18 +29,14 @@ passport.deserializeUser((user, done) => {
 })
 
 passport.use('wca', new WCAOAuth2Strategy({
-  authorizationURL: auth.authorization_endpoint,
-  tokenURL: auth.token_endpoint,
-  clientID: auth.client_id,
-  clientSecret: auth.client_secret,
+  authorizationURL: auth.authorizationUrl,
+  tokenURL: auth.tokenUrl,
+  clientID: auth.clientId,
+  clientSecret: auth.clientSecret,
   scope: auth.scope,
   callbackURL: `http${server.has('https') ? 's' : ''}://${server.host}:${server.port}/auth/callback`,
 }, async (accessToken, refreshToken, profile, done) => {
-  done(null, {
-    accessToken,
-    refreshToken,
-    profile,
-  })
+  done(null, profile)
 }))
 
 export default passport

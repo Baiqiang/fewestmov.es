@@ -9,11 +9,10 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'Fewest Moves',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -27,12 +26,15 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    'material-design-icons/iconfont/material-icons.css',
+    '~/assets/app.less',
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
     '~/plugins/i18n.js',
+    '~/plugins/moment.js',
   ],
   /*
   ** Nuxt.js modules
@@ -54,7 +56,13 @@ module.exports = {
     strategies: {
       wca: {
         _scheme: 'oauth2',
-        ...auth
+        client_id: auth.clientId,
+        token_endpoint: auth.tokenUrl,
+        authorization_endpoint: auth.authorizationUrl,
+        userinfo_endpoint: auth.userinfoUrl,
+        scope: auth.scope,
+        response_type: auth.responseType,
+        token_type: auth.tokenType,
       }
     }
   },

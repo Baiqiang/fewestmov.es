@@ -5,6 +5,7 @@ import session from 'express-session'
 import config from 'config'
 import passport from '../libs/passport'
 import router from './routes'
+import models from '../db'
 
 async function start() {
   const app = express()
@@ -27,6 +28,7 @@ async function start() {
   app.nuxt = nuxt
 
   if (nuxtConfig.dev) {
+    models.sequelize.sync()
     const builder = new Builder(nuxt)
     await builder.build()
   } else {

@@ -13,9 +13,9 @@ export const state = () => ({
 })
 
 export const actions = {
-  async nuxtServerInit(state, { app, req, store }) {
+  async nuxtServerInit(state, { app, req, res, store, error }) {
     if (req.user) {
-      app.$auth.setUser(req.user.profile)
+      app.$auth.setUser(req.user)
     }
     const locale = app.$cookies.get('locale')
     if (locale) {

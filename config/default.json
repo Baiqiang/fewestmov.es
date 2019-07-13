@@ -4,17 +4,17 @@
     "port": 3000
   },
   "auth": {
-    "client_id": "BHRDKfu7CguB9D9ijTtoZV67A46m2mQ0VMEZhe-h1ak",
-    "client_secret": "",
-    "token_endpoint": "https://www.worldcubeassociation.org/oauth/token",
-    "authorization_endpoint": "https://www.worldcubeassociation.org/oauth/authorize",
-    "userinfo_endpoint": "https://www.worldcubeassociation.org/api/v0/me",
+    "clientId": "BHRDKfu7CguB9D9ijTtoZV67A46m2mQ0VMEZhe-h1ak",
+    "clientSecret": "",
+    "tokenUrl": "https://www.worldcubeassociation.org/oauth/token",
+    "authorizationUrl": "https://www.worldcubeassociation.org/oauth/authorize",
+    "userinfoUrl": "https://www.worldcubeassociation.org/api/v0/me",
     "scope": [
       "public",
       "email"
     ],
-    "response_type": "code",
-    "token_type": "Bearer"
+    "responseType": "code",
+    "tokenType": "Bearer"
   },
   "session": {
     "secret": "blabla",
@@ -23,5 +23,21 @@
     "cookie": {
       "maxAge": 604800000
     }
+  },
+  "db": {
+    "database": "fewestmov.es",
+    "username": "fewestmov.es",
+    "password": "",
+    "dialect": "mysql",
+    "logging": false,
+    "define": {
+      "underscored": true,
+      "charset": "utf8",
+      "collate": "utf8_general_ci",
+      "timestamps": true
+    }
+  },
+  "if": {
+    "maxCycles": 8
   }
 }

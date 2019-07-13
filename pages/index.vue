@@ -1,17 +1,13 @@
 <template>
-  <div class="container">
+  <div>
   </div>
 </template>
 
 <script>
 
 export default {
-  methods: {
-  },
-  components: {
+  mounted() {
+    this.$router.push('/if')
   }
 }
 </script>
-
-<style>
-</style>

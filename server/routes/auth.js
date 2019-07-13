@@ -1,25 +1,44 @@
 import express from 'express'
 import passport from 'passport'
+import models from '../../db'
 
+const { User } = models
 const router = express.Router()
 
 router.use('/callback', async (req, res, next) => {
-  const app = req.app
-  const nuxt = app.nuxt
-  passport.authenticate('wca', function(err, user, info) {
+  passport.authenticate('wca', async (err, profile, info) => {
     if (err) {
-      return next(err)
+      return res.redirect('/error')
     }
-    if (!user) {
+    if (!profile) {
       return res.redirect('/login')
     }
-    req.login(user, function(err) {
-      if (err) {
-        return next(err)
-      }
-      return res.redirect('/')
-    })
-  })(req, res, next)
+    try {
+      const [user] = await User.findOrCreate({
+        where: {
+          email: profile.email,
+        }
+      })
+      user.name = profile.name
+      user.wcaId = profile.wca_id
+      user.avatar = profile.avatar.url
+      user.avatarThumb = profile.avatar.thumb_url
+      await user.save()
+      req.login(user, function(err) {
+        if (err) {
+          return next(err)
+        }
+        return res.redirect('/')
+      })
+    } catch (e) {
+      return res.redirect('/error')
+    }
+  })(req, res, async (err) => {
+    if (err) {
+      return res.redirect('/error')
+    }
+    await next()
+  })
 })
 
 export default router

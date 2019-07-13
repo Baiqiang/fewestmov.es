@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <nuxt class="wrapper" />
+    <nuxt class="wrapper container" />
   </div>
 </template>
 
@@ -17,6 +17,6 @@ export default {
 
 <style lang="less">
 .wrapper {
-  padding-top: 60px;
+  padding-top: 75px;
 }
 </style>
