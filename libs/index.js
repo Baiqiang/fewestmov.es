@@ -10,7 +10,7 @@ export function formatAlgorithm(string) {
 }
 
 export function getPagination(total, page) {
-  const perPage = 3
+  const perPage = 50
   page = parseInt(page)
   if (Number.isNaN(page)) {
     page = 1
@@ -21,8 +21,12 @@ export function getPagination(total, page) {
   if (page > Math.ceil(total / perPage)) {
     page = Math.ceil(total / perPage)
   }
+  const offset = (page - 1) * perPage
+  if (offset < 0) {
+    offset = 0
+  }
   return {
     limit: perPage,
-    offset: (page - 1) * perPage,
+    offset: offset,
   }
 }

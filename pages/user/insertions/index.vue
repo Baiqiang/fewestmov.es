@@ -66,7 +66,7 @@ export default {
   },
   data() {
     return {
-      perPage: 3,
+      perPage: 50,
       currentIF: null,
       name: '',
     }
