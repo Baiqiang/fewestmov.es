@@ -7,7 +7,7 @@
       </dd>
       <dt class="col-sm-12 col-md-3">{{ $t('if.skeleton.label') }}</dt>
       <dd class="col-sm-12 col-md-9">
-        <pre>{{ skeleton }}</pre>
+        <pre v-html="commentSkeleton(skeleton)"></pre>
       </dd>
       <dt class="col-sm-12 col-md-3">{{ $t('if.algs.label') }}</dt>
       <dd class="col-sm-12 col-md-9">
@@ -160,6 +160,12 @@ export default {
           return 'badge-secondary'
       }
     },
+    commentSkeleton(skeleton) {
+      return skeleton.split('\n').map(s => {
+        s = s.split('//')
+        return s[0] + '<span class="text-muted">//' + s.slice(1, s.length).join('//') + '</span>'
+      }).join('\n')
+    },
     formatSkeleton(skeleton, insertion, place, index) {
       skeleton = skeleton.split(' ')
       let first = skeleton.slice(0, place)
@@ -170,25 +176,30 @@ export default {
         ...this.applyMarks(first, firstMarks),
         `[@${index + 1}]`,
         ...this.applyMarks(last, lastMarks),
-      ].join(' ')
+      ].join(' ') + ` (${skeleton.length})`
     },
-    formatInsertion(skeleton, insertion, place, index) {
+    formatInsertion(skeleton, _insertion, place, index) {
       skeleton = skeleton.split(' ')
       let first = skeleton.slice(0, place)
       let last = skeleton.slice(place, skeleton.length)
-      insertion = insertion.split(' ')
+      let insertion = _insertion.split(' ')
       const beginMarks = this.calcMarks([...insertion], [...first, ...insertion], true)
       const endMarks = this.calcMarks([...insertion], [...insertion, ...last])
       const begin = this.applyMarks(insertion, beginMarks)
       const end = this.applyMarks(insertion, endMarks)
+      const marks = []
       for (let i = 0; i < insertion.length; i++) {
         if (insertion[i] != begin[i]) {
           insertion[i] = begin[i]
+          marks[i] = beginMarks[i]
         } else if (insertion[i] != end[i]) {
+          marks[i] = endMarks[i]
           insertion[i] = end[i]
+        } else {
+          marks[i] = MARKS.NONE
         }
       }
-      return insertion.join(' ')
+      return insertion.join(' ') + ` (${formatAlgorithm(_insertion).split(' ').length}-${marks.reduce((cancellation, mark) => cancellation + mark)})`
     },
     rotateBefore(insertion, moves) {
       const rotation = []
