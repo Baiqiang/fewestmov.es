@@ -2,6 +2,7 @@ import { Algorithm } from 'insertionfinder'
 
 export function formatAlgorithm(string) {
   // remove comments
+  string = string.replace(/['‘’`]/g, "'")
   string = string.split('\n').map(s => s.split('//')[0]).join('')
   const algorithm = new Algorithm(string)
   algorithm.clearFlags()

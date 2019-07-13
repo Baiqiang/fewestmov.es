@@ -35,12 +35,24 @@ router.post('/', async (req, res, next) => {
         message: 'INVALID_SCRAMBLE',
       }
     }
+    if (scramble.split(' ').length > 50) {
+      throw {
+        code: 400,
+        message: 'SCRAMBLE_TOO_LONG',
+      }
+    }
     try {
       formattedSkeleton = formatAlgorithm(skeleton)
     } catch (e) {
       throw {
         code: 400,
         message: 'INVALID_SKELETON',
+      }
+    }
+    if (formattedSkeleton.split(' ').length > 50) {
+      throw {
+        code: 400,
+        message: 'SKELETON_TOO_LONG',
       }
     }
     // for non formatted skeleton
