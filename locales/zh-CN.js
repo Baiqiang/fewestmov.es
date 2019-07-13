@@ -1,4 +1,5 @@
 export default {
+  title: '最少步',
   header: {
     login: '登录',
     logout: '退出',

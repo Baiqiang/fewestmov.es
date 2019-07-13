@@ -60,6 +60,7 @@ import store from 'store'
 export default {
   head() {
     return {
+      title: [this.$t('if.title'), this.$t('title')].join(' - '),
       meta: [
         {
           name: 'description',

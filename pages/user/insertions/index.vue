@@ -59,6 +59,11 @@
 
 <script>
 export default {
+  head() {
+    return {
+      title: [this.$t('user.insertions'), this.$t('title')].join(' - ')
+    }
+  },
   data() {
     return {
       perPage: 3,

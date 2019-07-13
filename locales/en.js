@@ -1,4 +1,5 @@
 export default {
+  title: 'Fewest Moves',
   header: {
     login: 'Login',
     logout: 'Logout',

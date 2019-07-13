@@ -77,6 +77,11 @@
 
 <script>
 export default {
+  head() {
+    return {
+      title: [this.$t('if.title'), this.$t('title')].join(' - ')
+    }
+  },
   mounted() {
     if (this.status != 2) {
       this.timer = setInterval(this.updateResult.bind(this), 1000)
