@@ -163,6 +163,9 @@ export default {
     commentSkeleton(skeleton) {
       return skeleton.split('\n').map(s => {
         s = s.split('//')
+        if (s.length === 1) {
+          return s[0]
+        }
         return s[0] + '<span class="text-muted">//' + s.slice(1, s.length).join('//') + '</span>'
       }).join('\n')
     },
