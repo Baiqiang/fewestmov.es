@@ -10,6 +10,7 @@
     "tokenUrl": "https://www.worldcubeassociation.org/oauth/token",
     "authorizationUrl": "https://www.worldcubeassociation.org/oauth/authorize",
     "userinfoUrl": "https://www.worldcubeassociation.org/api/v0/me",
+    "callbackUrl": "/auth/callback",
     "scope": [
       "public",
       "email"

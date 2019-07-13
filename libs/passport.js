@@ -31,10 +31,10 @@ passport.deserializeUser((user, done) => {
 passport.use('wca', new WCAOAuth2Strategy({
   authorizationURL: auth.authorizationUrl,
   tokenURL: auth.tokenUrl,
+  callbackURL: auth.callbackUrl,
   clientID: auth.clientId,
   clientSecret: auth.clientSecret,
   scope: auth.scope,
-  callbackURL: `http${server.has('https') ? 's' : ''}://${server.host}:${server.port}/auth/callback`,
 }, async (accessToken, refreshToken, profile, done) => {
   done(null, profile)
 }))
