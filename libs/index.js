@@ -21,7 +21,7 @@ export function getPagination(total, page) {
   if (page > Math.ceil(total / perPage)) {
     page = Math.ceil(total / perPage)
   }
-  const offset = (page - 1) * perPage
+  let offset = (page - 1) * perPage
   if (offset < 0) {
     offset = 0
   }
