@@ -2,16 +2,22 @@ import path from 'path'
 import consola from 'consola'
 import express from 'express'
 import session from 'express-session'
+import connectRedis from 'connect-redis'
 import config from 'config'
 import passport from '../libs/passport'
 import router from './routes'
 import models from '../db'
 
+const RedisStore = connectRedis(session)
+
 async function start() {
   const app = express()
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(session(config.get('session')))
+  app.use(session({
+    store: new RedisStore(config.get('redis')),
+    ...config.get('session')
+  }))
   app.use(passport.initialize())
   app.use(passport.session())
 
