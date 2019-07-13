@@ -6,7 +6,7 @@ export default function ({ isHMR, app, store, req }) {
   if (req) {
     let locale = app.$cookies.get('locale')
     if (!locale) {
-      for (const language of req.headers['accept-language'].split(',')) {
+      for (const language of (req.headers['accept-language'] || '').split(',')) {
         const _locale = language.split(';')[0]
         if (store.state.locales.find(l => l.code === _locale)) {
           locale = _locale

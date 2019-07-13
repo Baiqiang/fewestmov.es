@@ -71,7 +71,7 @@ module.exports = {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    prefix: '/api',
+    baseURL: server.apiBaseUrl,
   },
   router: {
     middleware: [
@@ -81,7 +81,6 @@ module.exports = {
   server: {
     host: server.host,
     port: server.port,
-    https: server.has('https') ? server.https : undefined,
   },
   /*
   ** Build configuration
