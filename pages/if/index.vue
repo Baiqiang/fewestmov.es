@@ -88,6 +88,7 @@ export default {
           type: 'corner',
           list: [
             '3CP',
+            '3CP-pure',
             '2x2CP',
             'CO',
             'C-other',

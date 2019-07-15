@@ -51,6 +51,10 @@ export default {
         label: '三角换',
         description: '',
       },
+      '3CP-pure': {
+        label: '纯粹三角换',
+        description: '',
+      },
       '2x2CP': {
         label: '2-2角',
         description: '',

@@ -51,6 +51,10 @@ export default {
         label: '3 Corners',
         description: '',
       },
+      '3CP-pure': {
+        label: 'Pure 3 Corners',
+        description: '',
+      },
       '2x2CP': {
         label: '2-2 Corners',
         description: '',
