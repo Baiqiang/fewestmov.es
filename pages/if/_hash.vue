@@ -44,46 +44,14 @@
         {{ $t('if.solutions.no_proper') }}
       </dd>
       <dd class="col-sm-12 col-md-9" v-if="result && result.solutions.length">
-        <b-card
-          class="solution mb-3"
-          v-for="({ insertions, final_solution, cancellation }, index) in result.solutions"
-          :key="index"
-        >
-          <dl class="row mb-0">
-            <dt class="col-sm-12 col-md-4 col-lg-3">{{ $t('if.solutions.insertions') }}</dt>
-            <dd class="col-sm-12 col-md-8 col-lg-9">{{ insertions.length }}</dd>
-            <template v-for="({ skeleton, insertion, insert_place }, i) in insertions">
-              <dt class="col-sm-12 col-md-4 col-lg-3">{{ $t('if.skeleton.label') }}</dt>
-              <dd class="col-sm-12 col-md-8 col-lg-9 mb-0">
-                <pre v-html="formatSkeleton(skeleton, insertion, insert_place, i)"></pre>
-              </dd>
-              <dt class="col-sm-12 col-md-4 col-lg-3">@{{ i + 1 }}</dt>
-              <dd class="col-sm-12 col-md-8 col-lg-9">
-                <pre class="insertion" v-html="formatInsertion(skeleton, insertion, insert_place, i)">{{ insertion }}</pre>
-              </dd>
-            </template>
-            <dt class="col-sm-12 col-md-4 col-lg-3">{{ $t('if.solutions.final') }}</dt>
-            <dd class="col-sm-12 col-md-8 col-lg-9">
-              <pre>{{ final_solution }}</pre>
-            </dd>
-            <dt class="col-sm-12 col-md-4 col-lg-3">{{ $t('if.solutions.cancellation') }}</dt>
-            <dd class="col-sm-12 col-md-8 col-lg-9 mb-0">{{ cancellation }}</dd>
-          </dl>
-        </b-card>
+        <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" />
       </dd>
     </dl>
   </div>
 </template>
 
 <script>
-import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
-import { formatAlgorithm } from '~/libs'
-
-const MARKS = {
-  NONE: 0,
-  MERGED: 1,
-  CANCELLED: 2,
-}
+import Solution from '~/components/Solution'
 
 export default {
   head() {
@@ -168,153 +136,15 @@ export default {
         }
         return s[0] + '<span class="text-muted">//' + s.slice(1, s.length).join('//') + '</span>'
       }).join('\n')
-    },
-    formatSkeleton(skeleton, insertion, place, index) {
-      skeleton = skeleton.split(' ')
-      let first = skeleton.slice(0, place)
-      let last = skeleton.slice(place, skeleton.length)
-      let firstMarks = this.calcMarks(first, [...first, insertion])
-      let lastMarks = this.calcMarks(last, this.rotateBefore(insertion, [insertion, ...last]), true)
-      return [
-        ...this.applyMarks(first, firstMarks),
-        `[@${index + 1}]`,
-        ...this.applyMarks(last, lastMarks),
-      ].join(' ') + ` (${skeleton.length})`
-    },
-    formatInsertion(skeleton, _insertion, place, index) {
-      skeleton = skeleton.split(' ')
-      let first = skeleton.slice(0, place)
-      let last = skeleton.slice(place, skeleton.length)
-      let insertion = _insertion.split(' ')
-      const beginMarks = this.calcMarks([...insertion], [...first, ...insertion], true)
-      const endMarks = this.calcMarks([...insertion], [...insertion, ...last])
-      const begin = this.applyMarks(insertion, beginMarks)
-      const end = this.applyMarks(insertion, endMarks)
-      const marks = []
-      for (let i = 0; i < insertion.length; i++) {
-        if (insertion[i] != begin[i]) {
-          insertion[i] = begin[i]
-          marks[i] = beginMarks[i]
-        } else if (insertion[i] != end[i]) {
-          marks[i] = endMarks[i]
-          insertion[i] = end[i]
-        } else {
-          marks[i] = MARKS.NONE
-        }
-      }
-      return insertion.join(' ') + ` (${formatAlgorithm(_insertion).split(' ').length}-${marks.reduce((cancellation, mark) => cancellation + mark)})`
-    },
-    rotateBefore(insertion, moves) {
-      const rotation = []
-      insertion = insertion.split(' ')
-      for (let i = 0; i < insertion.length; i++) {
-        if ('xyz'.indexOf(insertion[i].charAt(0)) > -1) {
-          rotation.push(this.inverse(insertion[i]))
-        }
-      }
-      return [...rotation.reverse(), ...moves]
-    },
-    inverse(r) {
-      const f = r.charAt(0)
-      switch (r.charAt(1)) {
-        case '':
-          return `${f}'`
-        case "'":
-          return f
-        case '2':
-          return r
-      }
-    },
-    applyMarks(algs, marks) {
-      algs = [...algs]
-      for (let i = 0; i < algs.length; i++) {
-        switch (marks[i]) {
-          case MARKS.MERGED:
-            algs[i] = `<span class="merged-move">${algs[i]}</span>`
-            break
-          case MARKS.CANCELLED:
-            algs[i] = `<span class="cancelled-move">${algs[i]}</span>`
-            break
-        }
-      }
-      return algs
-    },
-    calcMarks(algs, final, atTheEnd = false) {
-      // format final moves
-      final = final.join(' ')
-      final = formatAlgorithm(final)
-      final = final.split(' ')
-      // check rotations
-      const rotations = []
-      for (let i = 0; i < algs.length; i++) {
-        if ('xyz'.indexOf(algs[i].charAt(0)) > -1) {
-          rotations.push(algs[i])
-        }
-      }
-      if (rotations.length > 0) {
-        // slice notations
-        algs = algs.slice(0, algs.length - rotations.length)
-      }
-      if (atTheEnd) {
-        final.reverse()
-        algs.reverse()
-      }
-      let cancellationIndex = algs.length
-      const marks = []
-      for (let i = 0; i < algs.length; i++) {
-        if (algs[i] != final[i]) {
-          // merged or cancelled
-          if (final[i] && algs[i].charAt(0) === final[i].charAt(0)) {
-            marks.push(MARKS.MERGED)
-          } else {
-            marks.push(MARKS.CANCELLED)
-          }
-          cancellationIndex = i
-        } else if (i > cancellationIndex) {
-          marks.push(MARKS.CANCELLED)
-        } else {
-          marks.push(false)
-        }
-      }
-      if (atTheEnd) {
-        algs.reverse()
-        marks.reverse()
-      }
-      if (rotations.length > 0) {
-        // append notations
-        rotations.forEach(r => algs.push(r))
-      }
-      return marks
     }
+  },
+  components: {
+    Solution
   }
 }
 </script>
 
 <style lang="less">
-.solution {
-  dt {
-    @media (min-width: 768px) {
-      text-align: right;
-    }
-  }
-  .merged-move {
-    background-color: #11ddf7;
-  }
-  .cancelled-move {
-    position: relative;
-    &:after {
-      content: "";
-      display: inline-block;
-      position: absolute;
-      left: -3px;
-      top: 50%;
-      width: 15px;
-      height: 2px;
-      background-color: red;
-      transform: translateY(-1px);
-    }
-  }
-}
 pre {
   margin-bottom: 0;
   white-space: pre-wrap;
