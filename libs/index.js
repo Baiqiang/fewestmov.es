@@ -161,5 +161,5 @@ export const MARKS = {
   NONE: 0,
   MERGED: 1,
   CANCELLED: 2,
-  MERGED_OR_CANCELLED: 2,
+  MERGED_OR_CANCELLED: 3,
 }

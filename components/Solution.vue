@@ -49,14 +49,11 @@ export default {
         const [lastInsertionMarks, lastMarks] = calcMarks(insertion, lastPart)
         const insertionMarks = firstInsertionMarks.map((mark, i) => {
           const markB = lastInsertionMarks[i]
-          if (mark == MARKS.NONE || markB == MARKS.NONE) {
+          if (mark == MARKS.NONE || markB == MARKS.NONE || mark + markB === MARKS.MERGED_OR_CANCELLED) {
             return mark + markB
           }
           if (mark === MARKS.CANCELLED && markB === MARKS.CANCELLED) {
             return mark
-          }
-          if (mark + markB === MARKS.MERGED_OR_CANCELLED) {
-            return MARKS.MERGED_OR_CANCELLED
           }
           let twist = formattedInsertion[i]
           let j = firstPart.length - 1 - i
