@@ -44,6 +44,6 @@
     "port": 6379
   },
   "if": {
-    "maxCycles": 8
+    "maxCycles": 10
   }
 }
