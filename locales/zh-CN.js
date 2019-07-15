@@ -29,11 +29,18 @@ export default {
     },
     scramble: {
       label: '打乱',
-      description: '',
+      description: '请勿输入任何非法<a href="https://www.worldcubeassociation.org/regulations/translations/chinese/#12a target="_blank">转动步骤</a>！',
+      invalid: '请检查你的打乱！',
     },
     skeleton: {
       label: '复原',
-      description: '',
+      description: '只允许以下输入：',
+      invalid: '请检查你的复原！',
+      list: [
+        'WCA<a href="https://www.worldcubeassociation.org/regulations/#article-12-notation" target="_blank">转动步骤</a>；',
+        '"()"表示逆序；"NISS"用以切换打乱正序或者逆序；二者不可混合使用；',
+        '每一行的"//"及其之后的内容表示注释。',
+      ],
     },
     algs: {
       label: '公式集',

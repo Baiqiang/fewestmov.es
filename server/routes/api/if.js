@@ -20,7 +20,7 @@ router.post('/', async (req, res, next) => {
       }
     }
     skeleton = String(skeleton)
-    if (!Array.isArray(algs)) {
+    if (!Array.isArray(algs) || algs.length === 0) {
       throw {
         code: 400,
         message: 'INVALID_ALGS'

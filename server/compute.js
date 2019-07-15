@@ -1,5 +1,5 @@
 import { spawn } from 'child_process'
-import config from 'config'
+import { maxCycles } from '../config/if'
 import models from '../db'
 
 const { User, InsertionFinder, RealInsertionFinder: RealIF, Alg } = models
@@ -19,10 +19,10 @@ async function start() {
     })
     for (const realIF of IFs) {
       console.log(`Start to compute ${realIF.hash}`)
-      if (realIF.totalCycles > config.get('if.maxCycles')) {
+      if (realIF.totalCycles > maxCycles) {
         realIF.status = STATUS.FINISHED
         await realIF.save()
-        console.log(`Exceeded max cycles: ${config.get('if.maxCycles')}`)
+        console.log(`Exceeded max cycles: ${maxCycles}`)
         continue
       }
       realIF.status = STATUS.COMPUTING

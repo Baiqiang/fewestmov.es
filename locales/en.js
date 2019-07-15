@@ -29,15 +29,22 @@ export default {
     },
     scramble: {
       label: 'Scramble',
-      description: '',
+      description: 'Please don\'t input any invalid <a href="https://www.worldcubeassociation.org/regulations/#article-12-notation" target="_blank">notation</a>.',
+      invalid: 'Please check your scramble!',
     },
     skeleton: {
       label: 'Skeleton',
-      description: '',
+      description: 'Only the followings are allowed:',
+      invalid: 'Please check your skeleton!',
+      list: [
+        'WCA <a href="https://www.worldcubeassociation.org/regulations/#article-12-notation" target="_blank">notation</a>.',
+        '"()" for inverse moves. "NISS" for switching scramble. But "()" and "NISS" can\'t used at once.',
+        'Any content after "//" in each line will be considered as comments.',
+      ],
     },
     algs: {
       label: 'Algorithms',
-      description: '',
+      description: 'Please choose at least one algorithm.',
       corner: {
         label: 'Corners',
       },
