@@ -23,6 +23,13 @@ export function calcMarks(skeleton, insertion) {
     alg.clearFlags()
     switch (alg.twists.length) {
       case 0:
+        if (skeletonMarks[i + 1] !== MARKS.CANCELLED && skeletonMarks[i + 1] !== undefined) {
+          const swappableA = isSwappable(a, skeleton[i + 1])
+          if (!swappableA || skeletonMarks[i + 2] !== MARKS.CANCELLED && skeletonMarks[i + 2] !== undefined) {
+            i = -1
+            break
+          }
+        }
         // cancelled
         skeletonMarks[i] = MARKS.CANCELLED
         insertionMarks[j] = MARKS.CANCELLED
