@@ -196,7 +196,7 @@ export default {
       }
     },
     cycleValid() {
-      return this.cycles.total <= maxCycles
+      return this.cycles.total && this.cycles.total <= maxCycles
     }
   },
   methods: {
