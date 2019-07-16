@@ -78,7 +78,9 @@ router.post('/', async (req, res, next) => {
         paranoid: false
       })
       if (!userIF) {
-        userIF = await insertionFinder.addUser(req.user.id, { transaction })
+        [userIF] = await insertionFinder.addUser(req.user.id, { transaction })
+        userIF.name = name || ''
+        await userIF.save({ transaction })
       } else {
         userIF.name = name || ''
         userIF.deletedAt = null

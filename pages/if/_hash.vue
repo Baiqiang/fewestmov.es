@@ -111,6 +111,7 @@ export default {
     getBadgeClass(alg) {
       switch (alg) {
         case '3CP':
+        case '3CP-pure':
         case '2x2CP':
         case 'CO':
         case 'C-other':

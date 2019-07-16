@@ -25,7 +25,7 @@ export default {
     description: 'It\'s a useful tool to check the optimal insertions for 3x3x3 Fewest Moves.',
     name: {
       label: 'Name',
-      description: '',
+      description: 'You can type something to identify this insertion.',
     },
     scramble: {
       label: 'Scramble',

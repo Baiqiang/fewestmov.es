@@ -4,6 +4,18 @@
     <div v-html="$t('if.description')"></div>
     <b-form @submit="submit" @reset="reset" class="mt-3">
       <b-form-group
+        :label="$t('if.name.label')"
+        :description="$t('if.name.description')"
+        label-size="lg"
+        v-if="$auth.loggedIn"
+      >
+        <b-form-input
+          v-model="form.name"
+          type="text"
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group
         :label="$t('if.scramble.label')"
         label-size="lg"
       >
@@ -108,6 +120,7 @@ export default {
   data() {
     return {
       form: {
+        name: '',
         scramble: '',
         skeleton: '',
         algs: []

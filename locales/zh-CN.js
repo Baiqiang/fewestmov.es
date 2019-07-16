@@ -25,7 +25,7 @@ export default {
     description: '一个用于检查三阶最少步插入是否最优的实用工具。',
     name: {
       label: '名称',
-      description: '',
+      description: '可以输入一些用以区分这条插入的文字。',
     },
     scramble: {
       label: '打乱',
