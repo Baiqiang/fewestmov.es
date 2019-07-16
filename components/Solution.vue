@@ -44,17 +44,18 @@ export default {
         let firstPart = formattedSkeleton.slice(0, place)
         let lastPart = formattedSkeleton.slice(place)
         const rotations = formattedInsertion.filter(notation => 'xyz'.indexOf(notation.charAt(0)) > -1)
-        // skeleton
-        const [firstMarks, firstInsertionMarks] = calcMarks(firstPart, insertion)
-        const [lastInsertionMarks, lastMarks] = calcMarks(insertion, lastPart)
+        const cancelled = formattedSkeleton.length + formattedInsertion.length - rotations.length - nextSkeleton.split(' ').length
+        // calulate marks
+        const [firstMarks] = calcMarks(firstPart, formatAlgorithm([...formattedInsertion, ...lastPart]))
+        const [, lastMarks] = calcMarks([formatAlgorithm([...firstPart, ...formattedInsertion.slice(0, formattedInsertion.length - rotations.length)]), ...rotations].join(' '), lastPart)
+        const [, firstInsertionMarks] = calcMarks(firstPart, insertion)
+        const [lastInsertionMarks] = calcMarks(insertion, lastPart)
         const insertionMarks = firstInsertionMarks.map((mark, i) => {
           const markB = lastInsertionMarks[i]
-          if (mark == MARKS.NONE || markB == MARKS.NONE || mark + markB === MARKS.MERGED_OR_CANCELLED) {
+          if (mark == MARKS.NONE || markB == MARKS.NONE) {
             return mark + markB
           }
-          if (mark === MARKS.CANCELLED && markB === MARKS.CANCELLED) {
-            return mark
-          }
+          // find the index of conflict
           let twist = formattedInsertion[i]
           let j = firstPart.length - 1 - i
           if (!isSameFace(firstPart[j], twist)) {
@@ -73,26 +74,39 @@ export default {
               k = k + 1
             }
           }
+          // one side cancelled, the other side is nothing
+          if (mark === MARKS.CANCELLED) {
+            firstMarks[j] = MARKS.CANCELLED
+            lastMarks[k] = MARKS.NONE
+            return markB
+          }
+          if (markB === MARKS.CANCELLED) {
+            firstMarks[j] = MARKS.NONE
+            lastMarks[k] = MARKS.CANCELLED
+            return markB
+          }
+          // both sides merged, let's check the final result
           const alg = new Algorithm([firstPart[j], formattedInsertion[i], ...rotations, lastPart[k]].join(' '))
           alg.clearFlags()
           switch (alg.twists.length) {
             case 0:
-              return MARKS.CANCELLED
+              return firstMarks[j] = lastMarks[k] = MARKS.CANCELLED
             case 1:
-              return MARKS.MERGED
+              return firstMarks[j] = lastMarks[k] = MARKS.MERGED
           }
         })
+        // sort skeleton
+        this.sortSkeleton(firstPart, firstMarks)
+        this.sortSkeleton(lastPart, lastMarks, true)
         let marks = [
           ...firstMarks,
           MARKS.NONE,
           ...lastMarks,
         ]
-        const cancelled = formattedSkeleton.length + formattedInsertion.length - rotations.length - nextSkeleton.split(' ').length
         formattedSkeleton = [...firstPart, `[@${index + 1}]`, ...lastPart]
         this.applyMarks(formattedSkeleton, marks)
         formattedSkeleton = formattedSkeleton.join(' ')
         // insertion
-        // be careful about a move merged with both previous and next skeletons
         this.applyMarks(formattedInsertion, insertionMarks)
         formattedInsertion = [...formattedInsertion, `(${formattedInsertion.length - rotations.length}-${cancelled})`].join(' ')
         return {
@@ -112,6 +126,15 @@ export default {
     },
   },
   methods: {
+    sortSkeleton(skeleton, marks, inverse = false) {
+      for (let i = 0; i < marks.length - 1; i++) {
+        const j = i + 1
+        if ((marks[i] > marks[j] && !inverse) ||( marks[i] < marks[j] && inverse)) {
+          [marks[i], marks[j]] = [marks[j], marks[i]];
+          [skeleton[i], skeleton[j]] = [skeleton[j], skeleton[i]];
+        }
+      }
+    },
     inverse(r) {
       const f = r.charAt(0)
       switch (r.charAt(1)) {
