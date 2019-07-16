@@ -5,12 +5,12 @@ import models from '../../../db'
 import { formatAlgorithm } from '../../../libs'
 
 const router = express.Router()
-const { sequelize, InsertionFinder, RealInsertionFinder, Alg } = models
+const { sequelize, InsertionFinder, RealInsertionFinder, UserInsertionFinder, Alg } = models
 
 router.post('/', async (req, res, next) => {
   const transaction = await sequelize.transaction()
   try {
-    let { scramble, skeleton, algs } = req.body
+    let { scramble, skeleton, algs, name } = req.body
     let formattedSkeleton
     scramble = String(scramble)
     if (scramble.length === 0) {
@@ -69,7 +69,22 @@ router.post('/', async (req, res, next) => {
       transaction,
     })
     if (req.user) {
-      await insertionFinder.addUser(req.user.id, { transaction })
+      let userIF = await UserInsertionFinder.findOne({
+        where: {
+          insertion_finder_id: insertionFinder.id,
+          user_id: req.user.id
+        },
+        transaction,
+        paranoid: false
+      })
+      if (!userIF) {
+        userIF = await insertionFinder.addUser(req.user.id, { transaction })
+      } else {
+        userIF.name = name || ''
+        userIF.deletedAt = null
+        userIF.setDataValue('createdAt', new Date)
+        await userIF.restore({ transaction })
+      }
     }
     // for formatted skeleton
     const realHash = crypto.createHash('md5').update(JSON.stringify({

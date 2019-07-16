@@ -137,5 +137,7 @@ export default {
     reset: 'Reset',
     save: 'Save',
     cancel: 'Cancel',
+    delete: 'Delete',
+    deleteConfirm: 'Are you sure to delete this?',
   },
 }

@@ -137,5 +137,7 @@ export default {
     reset: '重置',
     save: '保存',
     cancel: '取消',
+    delete: '删除',
+    deleteConfirm: '确认要删除这条记录吗？',
   },
 }
