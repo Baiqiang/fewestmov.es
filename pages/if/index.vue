@@ -2,7 +2,7 @@
   <div>
     <h3>{{ $t('if.title') }}</h3>
     <div v-html="$t('if.description')"></div>
-    <b-form @submit="submit" @reset="reset" class="mt-3">
+    <b-form @submit="submit" @reset="reset" class="my-3">
       <b-form-group
         :label="$t('if.name.label')"
         :description="$t('if.name.description')"
@@ -76,6 +76,8 @@
               v-for="alg in list"
               :key="alg"
               :value="alg"
+              class="alg"
+              :class="{ 'suggest-alg': suggestAlgs.indexOf(alg) > -1 }"
             >
               {{ $t(['if.algs', alg, 'label'].join('.')) }}
             </b-form-checkbox>
@@ -210,6 +212,24 @@ export default {
     },
     cycleValid() {
       return this.cycles.total && this.cycles.total <= maxCycles
+    },
+    suggestAlgs() {
+      const cycles = this.cycles
+      const suggestAlgs = []
+      if (cycles.corners > 0) {
+        suggestAlgs.push('3CP')
+        suggestAlgs.push('3CP-pure')
+      }
+      if (cycles.edges > 0) {
+        suggestAlgs.push('3EP')
+      }
+      if (cycles.centers > 0) {
+        suggestAlgs.push('center')
+      }
+      if (cycles.parity) {
+        suggestAlgs.push('parity')
+      }
+      return suggestAlgs
     }
   },
   methods: {
@@ -229,11 +249,12 @@ export default {
     },
     reset() {
       this.form = {
+        name: '',
         scramble: '',
         skeleton: '',
         algs: []
       }
-    }
+    },
   },
   watch: {
     form: {
@@ -245,3 +266,25 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+.alg {
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    right: 0;
+    border-bottom: 2px solid rgba(255, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+}
+.suggest-alg {
+  &:after {
+    transform: scaleX(1);
+  }
+}
+</style>
