@@ -5,6 +5,9 @@ export default {
     logout: '退出',
   },
   common: {
+    id: 'ID',
+    wcaId: 'WCA ID',
+    email: '邮箱',
     home: '首页',
     status: '状态',
     yes: '是',
@@ -12,6 +15,7 @@ export default {
   },
   error: {
     title: {
+      403: '没有权限',
       404: '页面未找到',
       other: '发生了一个错误'
     }
@@ -128,9 +132,20 @@ export default {
   },
   user: {
     insertions: '我的插入',
+    name: '姓名',
+    avatar: '头像',
     if: {
       changeName: '修改名称',
     },
+  },
+  admin: {
+    title: '管理',
+    user: {
+      title: '用户'
+    },
+    if: {
+      title: '插入',
+    }
   },
   form: {
     submit: '提交',

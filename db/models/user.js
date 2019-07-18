@@ -1,9 +1,16 @@
 export default (sequelize, DataTypes) => {
   class User extends sequelize.Model {
-    static associate({ InsertionFinder, UserInsertionFinder}) {
+    async hasRole(name) {
+      if (!this.roles) {
+        this.roles = await this.getUserRoles()
+      }
+      return this.roles.find(role => role.name === name) !== undefined
+    }
+    static associate({ InsertionFinder, UserInsertionFinder, UserRole}) {
       User.belongsToMany(InsertionFinder, {
         through: UserInsertionFinder,
       })
+      User.hasMany(UserRole)
     }
   }
   User.init({

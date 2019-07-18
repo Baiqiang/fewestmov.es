@@ -1,5 +1,5 @@
 <template>
-  <b-navbar :toggleable="false" class="position-fixed w-100" type="dark" variant="dark" tag="header">
+  <b-navbar :toggleable="false" class="position-fixed w-100" type="dark" variant="dark" tag="header" id="header">
     <b-navbar-brand to="/">
       {{ $t('common.home') }}
     </b-navbar-brand>
@@ -16,6 +16,13 @@
         <b-nav-item-dropdown right no-caret v-if="$auth.loggedIn">
           <template slot="button-content">
             <b-img class="avatar" fluid :src="$auth.user.avatarThumb" :alt="$auth.user.name"></b-img>
+          </template>
+          <template v-if="$auth.user.isAdmin">
+            <b-dropdown-group :header="$t('admin.title')">
+              <b-dropdown-item to="/admin/user" v-if="$auth.user.isAdmin">{{ $t('admin.user.title') }}</b-dropdown-item>
+              <b-dropdown-item to="/admin/if" v-if="$auth.user.isAdmin">{{ $t('admin.if.title') }}</b-dropdown-item>
+            </b-dropdown-group>
+            <b-dropdown-divider></b-dropdown-divider>
           </template>
           <b-dropdown-item to="/user/insertions" >{{ $t('user.insertions') }}</b-dropdown-item>
           <b-dropdown-item to="/logout" >{{ $t('header.logout') }}</b-dropdown-item>
@@ -54,12 +61,12 @@ export default {
 </script>
 
 <style lang="less">
-header {
+#header {
   height: 60px;
   z-index: 99;
-}
-img.avatar {
-  width: 32px;
-  height: 32px;
+  img.avatar {
+    width: 32px;
+    height: 32px;
+  }
 }
 </style>

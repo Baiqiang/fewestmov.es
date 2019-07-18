@@ -1,4 +1,5 @@
 import { Algorithm } from 'insertionfinder'
+import { perPage } from '../config/if'
 
 export function calcMarks(skeleton, insertion) {
   if (!Array.isArray(skeleton)) {
@@ -143,7 +144,6 @@ function isSameFace(a, b) {
 export { isSwappable, isSameFace, formatAlgorithm }
 
 export function getPagination(total, page) {
-  const perPage = 50
   page = parseInt(page)
   if (Number.isNaN(page)) {
     page = 1

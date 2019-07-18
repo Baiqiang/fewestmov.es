@@ -15,7 +15,12 @@ export const state = () => ({
 export const actions = {
   async nuxtServerInit(state, { app, req, res, store, error }) {
     if (req.user) {
-      app.$auth.setUser(req.user)
+      const user = {
+        ...req.user.dataValues
+      }
+      user.isAdmin = await req.user.hasRole('admin')
+      user.roles = req.user.roles
+      app.$auth.setUser(user)
     }
     const locale = app.$cookies.get('locale')
     if (locale) {

@@ -2,7 +2,7 @@ import express from 'express'
 import passport from 'passport'
 import models from '../../db'
 
-const { User } = models
+const { User, UserRole } = models
 const router = express.Router()
 
 router.use('/callback', async (req, res, next) => {
@@ -31,10 +31,12 @@ router.use('/callback', async (req, res, next) => {
         return res.redirect('/')
       })
     } catch (e) {
+      console.log(e)
       return res.redirect('/error')
     }
   })(req, res, async (err) => {
     if (err) {
+      console.log(err)
       return res.redirect('/error')
     }
     await next()

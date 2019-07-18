@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import { perPage } from '~/config/if'
+
 export default {
   head() {
     return {
@@ -88,7 +90,7 @@ export default {
   },
   data() {
     return {
-      perPage: 50,
+      perPage: perPage,
       toBeUpdated: null,
       toBeRemoved: null,
       toBeRemovedIndex: 0,

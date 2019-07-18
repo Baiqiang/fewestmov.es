@@ -187,7 +187,7 @@ export default {
       right: -3px;
       top: 50%;
       height: 2px;
-      background-color: red;
+      background-color: rgba(255, 0, 0, 0.5);
       transform: translateY(-1px);
     }
   }

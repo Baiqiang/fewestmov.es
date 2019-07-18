@@ -5,6 +5,9 @@ export default {
     logout: 'Logout',
   },
   common: {
+    id: 'ID',
+    wcaId: 'WCA ID',
+    email: 'Email',
     home: 'Home',
     status: 'Status',
     yes: 'Yes',
@@ -12,6 +15,7 @@ export default {
   },
   error: {
     title: {
+      403: 'Forbidden',
       404: 'Page not found',
       other: 'An error occurred'
     }
@@ -122,15 +126,26 @@ export default {
       final: 'Final Solution',
       cancellation: 'Cancellation',
       exceed: "There're too many insertions to be inserted. I don't want to do it.",
-      no_proper: 'There\'s proper insertion.',
+      no_proper: 'There\'s no proper insertion.',
     },
     fewestmoves: 'Fewest Moves',
   },
   user: {
     insertions: 'My Insertions',
+    name: 'Name',
+    avatar: 'Avatar',
     if: {
       changeName: 'Change Name',
     },
+  },
+  admin: {
+    title: 'Admin',
+    user: {
+      title: 'Users'
+    },
+    if: {
+      title: 'IFs',
+    }
   },
   form: {
     submit: 'Submit',

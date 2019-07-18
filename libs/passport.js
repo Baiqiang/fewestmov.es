@@ -2,6 +2,9 @@ import passport from 'passport'
 import { OAuth2Strategy } from 'passport-oauth'
 import config from 'config'
 import axios from 'axios'
+import models from '../db'
+
+const { User, UserRole } = models
 
 const auth = config.get('auth')
 const server = config.get('server')
@@ -22,10 +25,11 @@ class WCAOAuth2Strategy extends OAuth2Strategy {
 }
 
 passport.serializeUser((user, done) => {
-  done(null, user)
+  done(null, user.id)
 })
-passport.deserializeUser((user, done) => {
-  done(null, user)
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findByPk(id)
+  await done(null, user)
 })
 
 passport.use('wca', new WCAOAuth2Strategy({
