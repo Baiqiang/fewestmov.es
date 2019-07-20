@@ -13,6 +13,9 @@ export function calcMarks(skeleton, insertion) {
     skeleton = skeleton.slice(0, skeleton.length - rotations.length)
     insertion = formatAlgorithm([...rotations, ...insertion]).split(' ')
   }
+  if (insertion.length === 1 && insertion[0] === '') {
+    insertion = []
+  }
   const skeletonMarks = skeleton.map(r => MARKS.NONE)
   const insertionMarks = insertion.map(r => MARKS.NONE)
   let i = skeleton.length - 1
@@ -20,6 +23,9 @@ export function calcMarks(skeleton, insertion) {
   while (i >= 0 && j < insertion.length) {
     const a = skeleton[i]
     const b = insertion[j]
+    if ('xyz'.indexOf(b.charAt(0))) {
+      break
+    }
     const alg = new Algorithm(`${a} ${b}`)
     alg.clearFlags()
     switch (alg.twists.length) {

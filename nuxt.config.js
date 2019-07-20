@@ -72,6 +72,7 @@ module.exports = {
   */
   axios: {
     baseURL: server.apiBaseUrl,
+    progress: false,
   },
   router: {
     middleware: [
