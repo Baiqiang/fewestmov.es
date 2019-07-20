@@ -23,7 +23,7 @@ export function calcMarks(skeleton, insertion) {
   while (i >= 0 && j < insertion.length) {
     const a = skeleton[i]
     const b = insertion[j]
-    if ('xyz'.indexOf(b.charAt(0))) {
+    if ('xyz'.indexOf(b.charAt(0)) > -1) {
       break
     }
     const alg = new Algorithm(`${a} ${b}`)
