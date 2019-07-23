@@ -66,6 +66,11 @@
         label-size="lg"
         :state="algsValid"
       >
+        <b-button-group>
+            <b-button variant="success" @click="checkAll">{{ $t('if.algs.all') }}</b-button>
+            <b-button variant="secondary" @click="checkNone">{{ $t('if.algs.none') }}</b-button>
+            <b-button variant="info" @click=checkNecessary>{{ $t('if.algs.necessary') }}</b-button>
+          </b-button-group>
         <b-form-group
           v-for="{ type, list } in algTypes"
           :key="type"
@@ -255,6 +260,15 @@ export default {
         algs: []
       }
     },
+    checkAll() {
+      this.form.algs = this.algTypes.reduce((algs, type) => [...algs, ...type.list], [])
+    },
+    checkNone() {
+      this.form.algs = []
+    },
+    checkNecessary() {
+      this.form.algs = this.suggestAlgs
+    }
   },
   watch: {
     form: {

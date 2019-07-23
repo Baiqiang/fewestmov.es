@@ -106,6 +106,9 @@ export default {
         label: '其他没有parity的公式',
         description: '',
       },
+      all: '全选',
+      none: '全不选',
+      necessary: '仅选择必要',
     },
     cycles: {
       label: '循环',

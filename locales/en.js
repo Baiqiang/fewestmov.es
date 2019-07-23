@@ -106,6 +106,9 @@ export default {
         label: 'Other Algs without Parity',
         description: '',
       },
+      all: 'All',
+      none: 'None',
+      necessary: 'Necessary',
     },
     cycles: {
       label: 'Cycles',
