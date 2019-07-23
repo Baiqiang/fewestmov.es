@@ -5,12 +5,12 @@
     <dl class="row mb-0">
       <dt class="col-sm-12 col-md-4 col-lg-3">{{ $t('if.solutions.insertions') }}</dt>
       <dd class="col-sm-12 col-md-8 col-lg-9">{{ insertions.length }}</dd>
-      <template v-for="({ formattedSkeleton, formattedInsertion }, i) in insertions">
+      <template v-for="({ formattedSkeleton, formattedInsertion, insertionSymbol }, i) in insertions">
         <dt class="col-sm-12 col-md-4 col-lg-3">{{ $t('if.skeleton.label') }}</dt>
         <dd class="col-sm-12 col-md-8 col-lg-9 mb-0">
           <pre v-html="formattedSkeleton"></pre>
         </dd>
-        <dt class="col-sm-12 col-md-4 col-lg-3">{{ getInsertionSymble(i) }}</dt>
+        <dt class="col-sm-12 col-md-4 col-lg-3">{{ insertionSymbol }}</dt>
         <dd class="col-sm-12 col-md-8 col-lg-9">
           <pre class="insertion" v-html="formattedInsertion"></pre>
         </dd>
@@ -26,7 +26,19 @@
 </template>
 
 <script>
-const emojis = ['😁', '😍', '😂', '🤔', '😈', '👻', '👽', '😡', '😮'].sort(() => Math.random() - 0.5)
+const emojis = [
+  ['😡', '😭', '😰'],
+  ['😑', '😒', '🙄'],
+  ['😃', '😋', '😶'],
+  ['😆', '😬', '😉'],
+  ['😇', '😁', '😜'],
+  ['😮', '🤠', '😎'],
+  ['🤩', '😏', '🤗'],
+  ['😍', '🤑', '😲'],
+  ['👻', '👽', '👾'],
+  ['😱'],
+  ['😻'],
+]
 
 import { Algorithm } from 'insertionfinder'
 import { formatAlgorithm, calcMarks, MARKS, isSameFace, isSwappable } from '~/libs'
@@ -39,6 +51,7 @@ export default {
   },
   computed: {
     insertions() {
+      const indexes = {}
       return this.solution.insertions.map(({ skeleton, insertion, insert_place: place}, index, insertions) => {
         let formattedSkeleton = skeleton.split(' ')
         let formattedInsertion = insertion.split(' ')
@@ -47,6 +60,10 @@ export default {
         let lastPart = formattedSkeleton.slice(place)
         const rotations = formattedInsertion.filter(notation => 'xyz'.indexOf(notation.charAt(0)) > -1)
         const cancelled = formattedSkeleton.length + formattedInsertion.length - rotations.length - nextSkeleton.split(' ').length
+        if (!indexes[cancelled]) {
+          indexes[cancelled] = 0
+        }
+        const insertionSymbol = emojis[cancelled] && emojis[cancelled][indexes[cancelled]++] || `@${index + 1}`
         // calulate marks
         const [firstMarks] = calcMarks(firstPart, formatAlgorithm([...formattedInsertion, ...lastPart]))
         const [, lastMarks] = calcMarks([formatAlgorithm([...firstPart, ...formattedInsertion.slice(0, formattedInsertion.length - rotations.length)]), ...rotations].join(' '), lastPart)
@@ -105,7 +122,7 @@ export default {
           MARKS.NONE,
           ...lastMarks,
         ]
-        formattedSkeleton = [...firstPart, `${this.getInsertionSymble(index)}`, ...lastPart]
+        formattedSkeleton = [...firstPart, insertionSymbol, ...lastPart]
         this.applyMarks(formattedSkeleton, marks)
         formattedSkeleton = formattedSkeleton.join(' ')
         // insertion
@@ -117,6 +134,8 @@ export default {
           insertion,
           formattedInsertion,
           place,
+          cancelled,
+          insertionSymbol,
         }
       })
     },
@@ -165,9 +184,6 @@ export default {
           return alg
       }
     },
-    getInsertionSymble(index) {
-      return emojis[index] || `@${index + 1}`
-    }
   }
 }
 </script>
