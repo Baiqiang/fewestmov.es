@@ -10,6 +10,7 @@ export default (sequelize, DataTypes) => {
       User.belongsToMany(InsertionFinder, {
         through: UserInsertionFinder,
       })
+      User.hasMany(UserInsertionFinder)
       User.hasMany(UserRole)
     }
   }

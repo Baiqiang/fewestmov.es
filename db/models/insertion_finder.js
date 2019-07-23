@@ -19,12 +19,18 @@ export default (sequelize, DataTypes) => {
       }
       return info
     }
+    async getAdminInfo() {
+      const info = await this.getInfo()
+      const userIFs = await this.getUserInsertionFinders()
+      info.userIFs = await Promise.all(userIFs.map(userIF => userIF.getAdminInfo()))
+      return info
+    }
     static associate({ User, UserInsertionFinder, RealInsertionFinder }) {
       InsertionFinder.belongsToMany(User, {
         through: UserInsertionFinder,
       })
       InsertionFinder.belongsTo(RealInsertionFinder)
-      InsertionFinder.User
+      InsertionFinder.hasMany(UserInsertionFinder)
     }
   }
   InsertionFinder.init({

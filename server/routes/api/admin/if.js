@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
       ]
     })
     res.json({
-      insertions: await Promise.all(insertions.map(insertionFinder => insertionFinder.getInfo())),
+      insertions: await Promise.all(insertions.map(insertionFinder => insertionFinder.getAdminInfo())),
       total,
     })
   } catch (e) {

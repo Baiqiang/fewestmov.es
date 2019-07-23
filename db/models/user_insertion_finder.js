@@ -11,6 +11,14 @@ export default (sequelize, DataTypes) => {
         createdAt: this.createdAt,
       }
     }
+    async getAdminInfo() {
+      const info = {
+        name: this.name
+      }
+      const user = await this.getUser()
+      info.user = user
+      return info
+    }
     static associate({ InsertionFinder, User}) {
       UserInsertionFinder.belongsTo(User)
       UserInsertionFinder.belongsTo(InsertionFinder)

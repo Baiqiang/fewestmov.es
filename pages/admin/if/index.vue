@@ -18,8 +18,16 @@
           </b-button>
         </nuxt-link>
       </template>
-      <template slot="name" slot-scope="data">
-        <span class="text-monospace">{{ data.item.name || data.item.hash }}</span>
+      <template slot="userIFs" slot-scope="data">
+        <div v-if="data.value.length > 0">
+          <div v-for="({name, user}, index) in data.value" class="d-flex">
+            <a :href="'https://cubingchina.com/results/person/' + user.wcaId" target="_blank">{{ user.name }}</a>
+            <div class="ml-1">
+              {{ name }}
+            </div>
+          </div>
+        </div>
+        <span v-else>-</span>
       </template>
       <template slot="status" slot-scope="data">
         {{ $t('if.status.' + data.value) }}
@@ -90,8 +98,8 @@ export default {
           label: '',
         },
         {
-          key: 'name',
-          label: this.$t('if.name.label'),
+          key: 'userIFs',
+          label: this.$t('admin.user.title'),
         },
         {
           key: 'scramble',
