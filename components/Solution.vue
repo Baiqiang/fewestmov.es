@@ -10,7 +10,7 @@
         <dd class="col-sm-12 col-md-8 col-lg-9 mb-0">
           <pre v-html="formattedSkeleton"></pre>
         </dd>
-        <dt class="col-sm-12 col-md-4 col-lg-3">@{{ i + 1 }}</dt>
+        <dt class="col-sm-12 col-md-4 col-lg-3">{{ getInsertionSymble(i) }}</dt>
         <dd class="col-sm-12 col-md-8 col-lg-9">
           <pre class="insertion" v-html="formattedInsertion"></pre>
         </dd>
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+const emojis = ['😁', '😍', '😂', '🤔', '😈', '👻', '👽', '😡', '😮'].sort(() => Math.random() - 0.5)
+
 import { Algorithm } from 'insertionfinder'
 import { formatAlgorithm, calcMarks, MARKS, isSameFace, isSwappable } from '~/libs'
 
@@ -103,7 +105,7 @@ export default {
           MARKS.NONE,
           ...lastMarks,
         ]
-        formattedSkeleton = [...firstPart, `[@${index + 1}]`, ...lastPart]
+        formattedSkeleton = [...firstPart, `${this.getInsertionSymble(index)}`, ...lastPart]
         this.applyMarks(formattedSkeleton, marks)
         formattedSkeleton = formattedSkeleton.join(' ')
         // insertion
@@ -162,6 +164,9 @@ export default {
         default:
           return alg
       }
+    },
+    getInsertionSymble(index) {
+      return emojis[index] || `@${index + 1}`
     }
   }
 }
