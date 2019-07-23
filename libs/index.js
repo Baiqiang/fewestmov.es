@@ -58,6 +58,14 @@ export function calcMarks(skeleton, insertion) {
         // merged
         skeletonMarks[i] = MARKS.MERGED
         insertionMarks[j] = MARKS.MERGED
+        {
+          const swappableA = isSwappable(a, skeleton[i + 1])
+          const swappableB = isSwappable(b, skeleton[j - 1])
+          if (!swappableA || !swappableB) {
+            i = -1
+            break
+          }
+        }
         i--
         j++
         break

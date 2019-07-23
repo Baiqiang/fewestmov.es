@@ -82,3 +82,12 @@ test('Cancellation case 9', t => {
     ]
   )
 })
+test('Cancellation case 10', t=> {
+  t.deepEqual(calcMarks(
+    "R' D R2 L2 U' R U",
+    "U' R' U' R2 L' F L2"
+    ), [
+    [0, 0, 0, 0, 1, 2, 2],
+    [2, 2, 1, 0, 0, 0, 0]
+  ])
+})
