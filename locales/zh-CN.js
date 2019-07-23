@@ -134,17 +134,16 @@ export default {
     fewestmoves: '最少步数',
   },
   user: {
-    insertions: '我的插入',
+    if: '我的插入',
     name: '姓名',
     avatar: '头像',
-    if: {
-      changeName: '修改名称',
-    },
+    changeName: '修改名称',
   },
   admin: {
     title: '管理',
     user: {
-      title: '用户'
+      title: '用户',
+      if: '{name}的插入',
     },
     if: {
       title: '插入',

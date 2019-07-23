@@ -12,6 +12,11 @@
       <template slot="wcaId" slot-scope="data">
         <a :href="'https://cubingchina.com/results/person/' + data.value" target="_blank">{{ data.value }}</a>
       </template>
+      <template slot="insertions" slot-scope="data">
+        <nuxt-link :to="`/admin/user/${data.item.id}/if`">
+          {{ data.value }}
+        </nuxt-link>
+      </template>
       <template slot="avatar" slot-scope="data">
         <b-img-lazy class="avatar" fluid :src="data.value" :alt="data.item.name"></b-img-lazy>
       </template>
@@ -33,7 +38,7 @@
 export default {
   head() {
     return {
-      title: [this.$t('admin.if.title'), this.$t('admin.title'), this.$t('title')].join(' - ')
+      title: [this.$t('admin.user.title'), this.$t('admin.title'), this.$t('title')].join(' - ')
     }
   },
   data() {
@@ -85,8 +90,12 @@ export default {
           label: this.$t('user.name'),
         },
         {
+          key: 'insertions',
+          label: this.$t('if.solutions.insertions'),
+        },
+        {
           key: 'wcaId',
-          label: this.$t('user.name'),
+          label: this.$t('common.wcaId'),
         },
         {
           key: 'avatar',

@@ -134,20 +134,19 @@ export default {
     fewestmoves: 'Fewest Moves',
   },
   user: {
-    insertions: 'My Insertions',
+    if: 'My IF',
     name: 'Name',
     avatar: 'Avatar',
-    if: {
-      changeName: 'Change Name',
-    },
+    changeName: 'Change Name',
   },
   admin: {
     title: 'Admin',
     user: {
-      title: 'Users'
+      title: 'User',
+      if: '{name}\'s IF',
     },
     if: {
-      title: 'IFs',
+      title: 'IF',
     }
   },
   form: {

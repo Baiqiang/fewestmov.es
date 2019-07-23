@@ -6,6 +6,16 @@ export default (sequelize, DataTypes) => {
       }
       return this.roles.find(role => role.name === name) !== undefined
     }
+    async getAdminInfo() {
+      const info = this.dataValues
+      const insertions = await this.sequelize.models.UserInsertionFinder.count({
+        where: {
+          user_id: this.id
+        }
+      })
+      info.insertions = insertions
+      return info
+    }
     static associate({ InsertionFinder, UserInsertionFinder, UserRole}) {
       User.belongsToMany(InsertionFinder, {
         through: UserInsertionFinder,

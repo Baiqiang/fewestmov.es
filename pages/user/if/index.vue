@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h3>{{ $t('user.insertions') }}</h3>
+    <h3>{{ $t('user.if') }}</h3>
     <b-table
       striped
       hover
-      :items="insertions"
+      :items="ifs"
       :fields="fields"
       :responsive="true"
       class="text-nowrap"
@@ -38,12 +38,12 @@
       v-if="totalPage"
       v-model="currentPage"
       :number-of-pages="totalPage"
-      base-url="/user/insertions/"
+      base-url="/user/if/"
       use-router
     ></b-pagination-nav>
     <b-modal
       v-model="showUpdateModal"
-      :title="$t('user.if.changeName')"
+      :title="$t('user.changeName')"
       @show="name = toBeUpdated.name"
       @ok="updateIF"
       centered
@@ -85,7 +85,7 @@ import { perPage } from '~/config/if'
 export default {
   head() {
     return {
-      title: [this.$t('user.insertions'), this.$t('title')].join(' - ')
+      title: [this.$t('user.if'), this.$t('title')].join(' - ')
     }
   },
   data() {
@@ -100,7 +100,7 @@ export default {
   async asyncData({ app, $axios, redirect, error, params}) {
     const page = params.page || 1
     try {
-      const result = await $axios.$get('/user/insertions', {
+      const result = await $axios.$get('/user/if', {
         params: {
           page,
         }
@@ -175,8 +175,8 @@ export default {
     },
     async removeIF() {
       try {
-        const result = await this.$axios.$delete(`/user/insertion/${this.toBeRemoved.hash}`)
-        this.insertions.splice(this.toBeRemovedIndex, 1)
+        const result = await this.$axios.$delete(`/user/if/${this.toBeRemoved.hash}`)
+        this.ifs.splice(this.toBeRemovedIndex, 1)
       } catch (e) {
         // do nothing
       }
@@ -184,7 +184,7 @@ export default {
     async updateIF() {
       const toBeUpdated = this.toBeUpdated
       try {
-        const result = await this.$axios.$post(`/user/insertion/${toBeUpdated.hash}`, {
+        const result = await this.$axios.$post(`/user/if/${toBeUpdated.hash}`, {
           name: this.name
         })
         toBeUpdated.name = result.name

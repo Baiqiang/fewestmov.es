@@ -24,7 +24,7 @@
             </b-dropdown-group>
             <b-dropdown-divider></b-dropdown-divider>
           </template>
-          <b-dropdown-item to="/user/insertions" >{{ $t('user.insertions') }}</b-dropdown-item>
+          <b-dropdown-item to="/user/if" >{{ $t('user.if') }}</b-dropdown-item>
           <b-dropdown-item to="/logout" >{{ $t('header.logout') }}</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>

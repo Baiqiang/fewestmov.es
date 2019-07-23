@@ -14,7 +14,7 @@ router.use(async (req, res, next) => {
   await next()
 })
 
-router.get('/insertions', async (req, res, next) => {
+router.get('/if', async (req, res, next) => {
   try {
     const user = req.user
     const total = await UserInsertionFinder.count({
@@ -33,9 +33,9 @@ router.get('/insertions', async (req, res, next) => {
         ['createdAt', 'DESC']
       ]
     })
-    const insertions = await Promise.all(userIFs.map(userIF => userIF.getInfo()))
+    const ifs = await Promise.all(userIFs.map(userIF => userIF.getInfo()))
     res.json({
-      insertions,
+      ifs,
       total,
     })
   } catch (e) {
@@ -48,7 +48,7 @@ router.get('/insertions', async (req, res, next) => {
   }
 })
 
-router.post('/insertion/:hash', async (req, res, next) => {
+router.post('/if/:hash', async (req, res, next) => {
   const hash = req.params.hash
   const name = req.body.name
   try {
@@ -80,7 +80,7 @@ router.post('/insertion/:hash', async (req, res, next) => {
   }
 })
 
-router.delete('/insertion/:hash', async (req, res, next) => {
+router.delete('/if/:hash', async (req, res, next) => {
   const hash = req.params.hash
   try {
     const insertionFinder = await InsertionFinder.findOne({
