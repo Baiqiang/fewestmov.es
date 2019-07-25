@@ -85,6 +85,9 @@
               :class="{ 'suggest-alg': suggestAlgs.indexOf(alg) > -1 }"
             >
               {{ $t(['if.algs', alg, 'label'].join('.')) }}
+              <a :href="`https://github.com/xuanyan0x7c7/insertionfinder/blob/master/data/algorithms/${alg}.txt`" target="_blank" class="text-info">
+                <i class="material-icons">help_outline</i>
+              </a>
             </b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
@@ -158,6 +161,13 @@ export default {
             'parity',
             'center',
             'no-parity-other',
+          ],
+        },
+        {
+          type: 'extra',
+          list: [
+            'extras/parity',
+            'extras/no-parity-other',
           ],
         },
       ],
@@ -281,7 +291,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .alg {
   position: relative;
   &:after {
@@ -300,5 +310,9 @@ export default {
   &:after {
     transform: scaleX(1);
   }
+}
+.material-icons {
+  font-size: 16px;
+  vertical-align: middle;
 }
 </style>

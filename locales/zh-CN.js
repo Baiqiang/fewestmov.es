@@ -58,6 +58,9 @@ export default {
       other: {
         label: '其他',
       },
+      extra: {
+        label: '额外',
+      },
       '3CP': {
         label: '三角换',
         description: '',
@@ -105,6 +108,12 @@ export default {
       'no-parity-other': {
         label: '其他没有parity的公式',
         description: '',
+      },
+      'extras/parity': {
+        label: '额外Parity'
+      },
+      'extras/no-parity-other': {
+        label: '额外没有parity的公式'
       },
       all: '全选',
       none: '全不选',

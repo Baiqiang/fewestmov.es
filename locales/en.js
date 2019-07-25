@@ -58,6 +58,9 @@ export default {
       other: {
         label: 'Other',
       },
+      extra: {
+        label: 'Extra',
+      },
       '3CP': {
         label: '3 Corners',
         description: '',
@@ -105,6 +108,12 @@ export default {
       'no-parity-other': {
         label: 'Other Algs without Parity',
         description: '',
+      },
+      'extras/parity': {
+        label: 'Extra Parity'
+      },
+      'extras/no-parity-other': {
+        label: 'Extra Algs without Parity'
       },
       all: 'All',
       none: 'None',

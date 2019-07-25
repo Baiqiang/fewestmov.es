@@ -122,11 +122,14 @@ export default {
         case 'E-other':
           return 'badge-primary'
         case 'parity':
+        case 'extras/parity':
           return 'badge-danger'
         case 'center':
           return 'badge-info'
         case 'no-parity-other':
+        case 'extras/no-parity-other':
           return 'badge-secondary'
+
       }
     },
     commentSkeleton(skeleton) {

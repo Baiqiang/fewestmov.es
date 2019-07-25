@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import models from '../../../db'
 import { formatAlgorithm } from '../../../libs'
+import { validAlgs } from '../../../config/if'
 
 const router = express.Router()
 const { sequelize, InsertionFinder, RealInsertionFinder, UserInsertionFinder, Alg } = models
@@ -24,6 +25,14 @@ router.post('/', async (req, res, next) => {
       throw {
         code: 400,
         message: 'INVALID_ALGS'
+      }
+    }
+    for (let alg of algs) {
+      if (validAlgs.indexOf(alg) === -1) {
+        throw {
+          code: 400,
+          message: 'INVALID_ALGS'
+        }
       }
     }
     algs.sort()
