@@ -11,10 +11,7 @@ export function calcMarks(skeleton, insertion) {
   const rotations = skeleton.filter(twist => 'xyz'.indexOf(twist.charAt(0)) > -1)
   if (rotations.length) {
     skeleton = skeleton.slice(0, skeleton.length - rotations.length)
-    insertion = formatAlgorithm([...rotations, ...insertion]).split(' ')
-  }
-  if (insertion.length === 1 && insertion[0] === '') {
-    insertion = []
+    insertion = formatAlgorithm([...rotations, ...insertion]).split(' ').filter(a => a != '')
   }
   const skeletonMarks = skeleton.map(r => MARKS.NONE)
   const insertionMarks = insertion.map(r => MARKS.NONE)
@@ -156,6 +153,10 @@ function isSameFace(a, b) {
 }
 
 export { isSwappable, isSameFace, formatAlgorithm }
+
+export function algLength(alg) {
+  return alg.split(' ').filter(a => a != '').length
+}
 
 export function getPagination(total, page) {
   page = parseInt(page)

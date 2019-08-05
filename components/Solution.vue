@@ -41,7 +41,7 @@ const emojis = [
 ]
 
 import { Algorithm } from 'insertionfinder'
-import { formatAlgorithm, calcMarks, MARKS, isSameFace, isSwappable } from '~/libs'
+import { formatAlgorithm, calcMarks, MARKS, isSameFace, isSwappable, algLength } from '~/libs'
 
 export default {
   props: ['solution'],
@@ -59,7 +59,7 @@ export default {
         let firstPart = formattedSkeleton.slice(0, place)
         let lastPart = formattedSkeleton.slice(place)
         const rotations = formattedInsertion.filter(notation => 'xyz'.indexOf(notation.charAt(0)) > -1)
-        const cancelled = formattedSkeleton.length + formattedInsertion.length - rotations.length - nextSkeleton.split(' ').length
+        const cancelled = algLength(skeleton) + formattedInsertion.length - rotations.length - algLength(nextSkeleton)
         if (!indexes[cancelled]) {
           indexes[cancelled] = 0
         }
