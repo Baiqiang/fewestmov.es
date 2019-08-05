@@ -1,15 +1,16 @@
 <template>
-  <b-navbar :toggleable="false" class="position-fixed w-100" type="dark" variant="dark" tag="header" id="header">
+  <b-navbar toggleable="md" class="position-fixed w-100" type="dark" variant="dark" tag="header" id="header">
     <b-navbar-brand to="/">
-      {{ $t('common.home') }}
+      <img src="~/assets/logo_color.svg" class="logo" alt="logo">
+      <img src="~/assets/text_light.svg" class="logo-text" alt="Fewest Moves">
     </b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-nav-item to="/if" :active="$route.name && $route.name.slice(0, 2) === 'if'">{{ $t('if.title') }}</b-nav-item>
       </b-navbar-nav>
-      <b-navbar-nav class="ml-auto align-items-center">
-        <b-nav-item-dropdown :text="currentLanguage" right>
+      <b-navbar-nav class="ml-auto">
+        <b-nav-item-dropdown :text="currentLanguage" right class="align-self-md-center">
           <b-dropdown-item v-for="{ code, name } in $store.state.locales" :key="code" @click="switchLocale(code)">{{ name }}</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item to="/login" v-if="!$auth.loggedIn">{{ $t('header.login') }}</b-nav-item>
@@ -62,11 +63,19 @@ export default {
 
 <style lang="less">
 #header {
-  height: 60px;
+  /*height: 75px;*/
   z-index: 99;
   img.avatar {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+  }
+  img.logo {
+    height: 40px;
+  }
+  img.logo-text {
+    margin-left: 5px;
+    height: 28px;
+    vertical-align: bottom;
   }
 }
 </style>
