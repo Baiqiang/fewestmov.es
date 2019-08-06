@@ -91,6 +91,11 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
+    },
+    terser: {
+      terserOptions: {
+        mangle: { safari10: true }
+      }
     }
   }
 }
