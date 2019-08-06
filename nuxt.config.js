@@ -92,6 +92,7 @@ module.exports = {
     */
     extend(config, ctx) {
     },
+    extractCSS: true,
     terser: {
       terserOptions: {
         mangle: { safari10: true }
