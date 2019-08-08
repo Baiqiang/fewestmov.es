@@ -1,33 +1,15 @@
 <template>
   <div>
+    <b-breadcrumb :items="breadcrumbs"></b-breadcrumb>
     <h3>{{ $t('admin.user.if', { name: user.name }) }}</h3>
-    <b-table
-      striped
-      hover
-      :items="ifs"
-      :fields="fields"
-      :responsive="true"
-      class="text-nowrap"
-    >
-      <template slot="link" slot-scope="data">
-        <nuxt-link :to="'/if/' + data.item.hash">
-          <b-button variant="warning" size="sm">
-            <i class="material-icons">
-              link
-            </i>
-          </b-button>
-        </nuxt-link>
-      </template>
-      <template slot="name" slot-scope="data">
-        <span class="text-monospace">{{ data.item.name || data.item.hash }}</span>
-      </template>
-      <template slot="status" slot-scope="data">
-        {{ $t('if.status.' + data.value) }}
-      </template>
-      <template slot="createdAt" slot-scope="data">
-        {{ data.value|formatTime }}
-      </template>
-    </b-table>
+    <div class="row">
+      <div
+        class="col-sm-12 col-md-6 col-lg-4 col-xl-3 py-3"
+        v-for="(userIF, index) in ifs"
+      >
+       <UserIFSummary :userIF="userIF"></UserIFSummary>
+      </div>
+    </div>
     <b-pagination-nav
       v-if="totalPage"
       v-model="currentPage"
@@ -40,6 +22,7 @@
 
 <script>
 import { perPage } from '~/config/if'
+import UserIFSummary from '~/components/UserIFSummary'
 
 export default {
   head() {
@@ -49,11 +32,7 @@ export default {
   },
   data() {
     return {
-      perPage: perPage,
-      toBeUpdated: null,
-      toBeRemoved: null,
-      toBeRemovedIndex: 0,
-      name: '',
+      perPage
     }
   },
   async asyncData({ app, $axios, redirect, error, params}) {
@@ -91,32 +70,23 @@ export default {
     totalPage() {
       return Math.ceil(this.total / this.perPage)
     },
-    fields() {
+    breadcrumbs() {
       return [
         {
-          key: 'link',
-          label: '',
+          text: this.$t('admin.title')
         },
         {
-          key: 'name',
-          label: this.$t('if.name.label'),
+          text: this.$t('admin.user.title'),
+          to: '/admin/user',
         },
         {
-          key: 'scramble',
-          label: this.$t('if.scramble.label'),
-        },
-        {
-          key: 'status',
-          label: this.$t('common.status'),
-        },
-        {
-          key: 'createdAt',
-          label: this.$t('common.created_at'),
-        },
+          text: this.user.name
+        }
       ]
     }
   },
-  methods: {
+  components: {
+    UserIFSummary
   }
 }
 </script>

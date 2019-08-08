@@ -1,5 +1,7 @@
 export const maxCycles = 10
-export const perPage = 50
+export const perPage = 60
+export const maxScrambleLength = 50
+export const maxSkeletonLength = 50
 export const validAlgs = [
   '3CP',
   '3CP-pure',
@@ -15,4 +17,10 @@ export const validAlgs = [
   'no-parity-other',
   'extras/parity',
   'extras/no-parity-other',
+]
+export const cycleKeys = [
+  'corners',
+  'edges',
+  'centers',
+  'parity',
 ]

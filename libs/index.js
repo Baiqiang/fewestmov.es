@@ -128,16 +128,24 @@ export function calcMarks(skeleton, insertion) {
 }
 
 function formatAlgorithm(string) {
+  string = removeComment(string)
+  const algorithm = new Algorithm(string)
+  algorithm.clearFlags()
+  algorithm.normalize()
+  return algorithm.toString()
+}
+
+function formatAlgorithmToArray(string) {
+  return formatAlgorithm(string).split(' ').filter(a => a!='')
+}
+
+function removeComment(string) {
   if (Array.isArray(string)) {
     string = string.join(' ')
   }
   // remove comments
   string = string.replace(/[‘’`]/g, "'")
-  string = string.split('\n').map(s => s.split('//')[0]).join('')
-  const algorithm = new Algorithm(string)
-  algorithm.clearFlags()
-  algorithm.normalize()
-  return algorithm.toString()
+  return string.split('\n').map(s => s.split('//')[0]).join('')
 }
 
 function isSwappable(a, b) {
@@ -152,7 +160,11 @@ function isSameFace(a, b) {
   return a && b && a.charAt(0) === b.charAt(0)
 }
 
-export { isSwappable, isSameFace, formatAlgorithm }
+export { isSwappable, isSameFace, formatAlgorithm, formatAlgorithmToArray, removeComment }
+
+export function centerLength(placement) {
+  return placement === 3 ? 6 : placement === 2 ? 4 : [2, 8, 10].includes(placement) ? 4 : 6
+}
 
 export function algLength(alg) {
   return alg.split(' ').filter(a => a != '').length

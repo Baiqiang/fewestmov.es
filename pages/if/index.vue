@@ -105,8 +105,8 @@
 <script>
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import store from 'store'
-import { formatAlgorithm } from '~/libs'
-import { maxCycles } from '~/config/if'
+import { formatAlgorithmToArray, removeComment } from '~/libs'
+import { maxCycles, maxSkeletonLength, maxScrambleLength, cycleKeys } from '~/config/if'
 
 export default {
   head() {
@@ -171,33 +171,30 @@ export default {
           ],
         },
       ],
-      cycleKeys: [
-        'corners',
-        'edges',
-        'centers',
-        'parity',
-      ]
+      cycleKeys,
     }
   },
   computed: {
     scrambleValid() {
-      if (this.form.scramble.length == 0) {
+      const scramble = this.form.scramble.trim()
+      if (scramble.length == 0) {
         return null
       }
       try {
-        const alg = new Algorithm(this.form.scramble)
-        return alg.twists.length > 0
+        const formatted = formatAlgorithmToArray(scramble)
+        return formatted.length > 0 && formatted.length <= maxScrambleLength
       } catch (e) {
         return false
       }
     },
     skeletonValid() {
-      if (this.form.skeleton.length == 0) {
+      const skeleton = this.form.skeleton.trim()
+      if (skeleton.length == 0) {
         return null
       }
       try {
-        formatAlgorithm(this.form.skeleton)
-        return formatAlgorithm.length > 0
+        const formatted = formatAlgorithmToArray(skeleton)
+        return formatted.length <= 50
       } catch (e) {
         return false
       }
@@ -211,7 +208,7 @@ export default {
       }
       const cube = new Cube()
       cube.twist(new Algorithm(this.form.scramble))
-      cube.twist(new Algorithm(formatAlgorithm(this.form.skeleton)))
+      cube.twist(new Algorithm(removeComment(this.form.skeleton)))
       const bestCube = cube.getBestPlacement()
       const corners = bestCube.getCornerCycles()
       const edges = bestCube.getEdgeCycles()

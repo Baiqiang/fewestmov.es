@@ -2,8 +2,8 @@ import express from 'express'
 import crypto from 'crypto'
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import models from '../../../db'
-import { formatAlgorithm } from '../../../libs'
-import { validAlgs } from '../../../config/if'
+import { formatAlgorithm, centerLength } from '../../../libs'
+import { validAlgs, maxScrambleLength, maxSkeletonLength } from '../../../config/if'
 
 const router = express.Router()
 const { sequelize, InsertionFinder, RealInsertionFinder, UserInsertionFinder, Alg } = models
@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
         message: 'INVALID_SCRAMBLE',
       }
     }
-    if (scramble.split(' ').length > 50) {
+    if (scramble.split(' ').length > maxScrambleLength) {
       throw {
         code: 400,
         message: 'SCRAMBLE_TOO_LONG',
@@ -58,7 +58,7 @@ router.post('/', async (req, res, next) => {
         message: 'INVALID_SKELETON',
       }
     }
-    if (formattedSkeleton.split(' ').length > 50) {
+    if (formattedSkeleton.split(' ').length > maxSkeletonLength) {
       throw {
         code: 400,
         message: 'SKELETON_TOO_LONG',
@@ -118,6 +118,7 @@ router.post('/', async (req, res, next) => {
       const cornerCycles = bestCube.getCornerCycles()
       const edgeCycles = bestCube.getEdgeCycles()
       const centerCycles = centerCycleTable[bestCube.placement]
+      const placement = bestCube.placement
       const parity = bestCube.hasParity()
       const totalCycles = (centerCycles > 1 ? 0 : parity * 3) + (cornerCycles + edgeCycles + centerCycles) * 2
       realInsertionFinder = await RealInsertionFinder.create({
@@ -132,6 +133,9 @@ router.post('/', async (req, res, next) => {
         cycleDetail: {
           corner: bestCube.getCornerStatus(),
           edge: bestCube.getEdgeStatus(),
+          center: centerCycles > 0 ? [{
+            length: centerLength(placement)
+          }] : [],
         },
         Algs: algs.map(name => ({name})),
       }, {

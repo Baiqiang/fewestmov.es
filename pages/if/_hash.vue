@@ -18,14 +18,10 @@
       <dt class="col-sm-12 col-md-3">{{ $t('if.cycles.label') }}</dt>
       <dd class="col-sm-12 col-md-9">
         <dl class="row mb-0">
-          <dt class="col-sm-4" v-if="cornerCycles">{{ $t('if.cycles.corners') }}</dt>
-          <dd class="col-sm-8 mb-0" v-if="cornerCycles">{{ cornerCycles }}</dd>
-          <dt class="col-sm-4" v-if="edgeCycles">{{ $t('if.cycles.edges') }}</dt>
-          <dd class="col-sm-8 mb-0" v-if="edgeCycles">{{ edgeCycles }}</dd>
-          <dt class="col-sm-4" v-if="centerCycles">{{ $t('if.cycles.centers') }}</dt>
-          <dd class="col-sm-8 mb-0" v-if="centerCycles">{{ centerCycles }}</dd>
-          <dt class="col-sm-4" v-if="parity">{{ $t('if.cycles.parity') }}</dt>
-          <dd class="col-sm-8 mb-0" v-if="parity">{{ $t('common.yes') }}</dd>
+          <template v-for="key in cycleKeys" v-if="cycles[key]">
+            <dt class="col-sm-4">{{ $t(`if.cycles.${key}`) }}</dt>
+            <dd class="col-sm-8 mb-0">{{ key === 'parity' ? $t('common.yes') : cycles[key] }}</dd>
+          </template>
         </dl>
       </dd>
       <dt class="col-sm-12 col-md-3">{{ $t('common.status') }}</dt>
@@ -52,6 +48,7 @@
 
 <script>
 import Solution from '~/components/Solution'
+import { cycleKeys } from '~/config/if'
 
 export default {
   head() {
@@ -71,7 +68,8 @@ export default {
   },
   data() {
     return {
-      timer: null
+      timer: null,
+      cycleKeys
     }
   },
   async asyncData({ $axios, params, error }) {

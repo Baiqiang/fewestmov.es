@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="md" class="position-fixed w-100" type="dark" variant="dark" tag="header" id="header">
+  <b-navbar toggleable="md" class="" sticky type="dark" variant="dark" tag="header" id="header">
     <b-navbar-brand to="/">
       <img src="~/assets/logo_color.svg" class="logo" alt="logo">
       <img src="~/assets/text_light.svg" class="logo-text" alt="Fewest Moves">

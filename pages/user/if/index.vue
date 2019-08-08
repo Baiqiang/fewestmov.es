@@ -1,39 +1,14 @@
 <template>
   <div>
     <h3>{{ $t('user.if') }}</h3>
-    <b-table
-      striped
-      hover
-      :items="ifs"
-      :fields="fields"
-      :responsive="true"
-      class="text-nowrap"
-    >
-      <template slot="link" slot-scope="data">
-        <nuxt-link :to="'/if/' + data.item.hash">
-          <b-button variant="warning" size="sm">
-            <i class="material-icons">
-              link
-            </i>
-          </b-button>
-        </nuxt-link>
-        <b-button variant="info" size="sm" @click="prepareForUpdate(data.item)">
-          <i class="material-icons">edit</i>
-        </b-button>
-        <b-button variant="danger" size="sm" @click="prepareForRemove(data.item, data.index)">
-          <i class="material-icons">delete</i>
-        </b-button>
-      </template>
-      <template slot="name" slot-scope="data">
-        <span class="text-monospace">{{ data.item.name || data.item.hash }}</span>
-      </template>
-      <template slot="status" slot-scope="data">
-        {{ $t('if.status.' + data.value) }}
-      </template>
-      <template slot="createdAt" slot-scope="data">
-        {{ data.value|formatTime }}
-      </template>
-    </b-table>
+    <div class="row">
+      <div
+        class="col-sm-12 col-md-6 col-lg-4 col-xl-3 py-3"
+        v-for="(userIF, index) in ifs"
+      >
+       <UserIFSummary :userIF="userIF" operation @remove="prepareForRemove(userIF, index)" @update="prepareForUpdate(userIF)"></UserIFSummary>
+      </div>
+    </div>
     <b-pagination-nav
       v-if="totalPage"
       v-model="currentPage"
@@ -81,6 +56,7 @@
 
 <script>
 import { perPage } from '~/config/if'
+import UserIFSummary from '~/components/UserIFSummary'
 
 export default {
   head() {
@@ -108,7 +84,6 @@ export default {
       result.currentPage = page
       return result
     } catch (e) {
-      console.log(e)
       if (e.response) {
         if (e.response.status === 401) {
           app.$auth.setUser(null)
@@ -140,30 +115,6 @@ export default {
     totalPage() {
       return Math.ceil(this.total / this.perPage)
     },
-    fields() {
-      return [
-        {
-          key: 'link',
-          label: '',
-        },
-        {
-          key: 'name',
-          label: this.$t('if.name.label'),
-        },
-        {
-          key: 'scramble',
-          label: this.$t('if.scramble.label'),
-        },
-        {
-          key: 'status',
-          label: this.$t('common.status'),
-        },
-        {
-          key: 'createdAt',
-          label: this.$t('common.created_at'),
-        },
-      ]
-    }
   },
   methods: {
     prepareForRemove(userIF, toBeRemovedIndex) {
@@ -192,6 +143,9 @@ export default {
         // do nothing
       }
     }
+  },
+  components: {
+    UserIFSummary
   }
 }
 </script>

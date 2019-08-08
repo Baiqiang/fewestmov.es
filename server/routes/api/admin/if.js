@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
   try {
     const total = await InsertionFinder.count()
     const { limit, offset } = getPagination(total, req.query.page)
-    const insertions = await InsertionFinder.findAll({
+    const ifs = await InsertionFinder.findAll({
       limit,
       offset,
       order: [
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
       ]
     })
     res.json({
-      insertions: await Promise.all(insertions.map(insertionFinder => insertionFinder.getAdminInfo())),
+      ifs: await Promise.all(ifs.map(insertionFinder => insertionFinder.getAdminInfo())),
       total,
     })
   } catch (e) {

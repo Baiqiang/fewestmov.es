@@ -7,6 +7,16 @@ export default (sequelize, DataTypes) => {
         hash: insertionFinder.hash,
         name: this.name,
         scramble: realIF.scramble,
+        skeleton:insertionFinder.skeleton,
+        cycleDetail: realIF.cycleDetail,
+        cycles: {
+          edges: realIF.edgeCycles,
+          corners: realIF.cornerCycles,
+          centers: realIF.centerCycles,
+          parity: realIF.parity,
+        },
+        cycleDetail: realIF.cycleDetail,
+        result: realIF.result,
         status: realIF.status,
         createdAt: this.createdAt,
       }

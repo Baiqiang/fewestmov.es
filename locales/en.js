@@ -45,6 +45,7 @@ export default {
         '"()" for inverse moves. "NISS" for switching scramble. But "()" and "NISS" can\'t used at once.',
         'Any content after "//" in each line will be considered as comments.',
       ],
+      to: '{length} to {detail}',
     },
     algs: {
       label: 'Algorithms',

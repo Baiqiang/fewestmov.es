@@ -17,6 +17,6 @@ export default {
 
 <style lang="less">
 .wrapper {
-  padding-top: 75px;
+  padding-top: 15px;
 }
 </style>
