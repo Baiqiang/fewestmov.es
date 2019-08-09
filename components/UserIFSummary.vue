@@ -7,7 +7,7 @@
       <b>{{ $t('if.scramble.label') }}: </b>{{ userIF.scramble }}
     </div>
     <div class="mb-1">
-      <b>{{ $t('if.skeleton.label') }}: </b>{{ $t('if.skeleton.to', {length: formatAlgorithmToArray(userIF.skeleton).length, detail: formatCycleDetail(userIF.cycleDetail) }) }}<br>
+      <b>{{ $t('if.skeleton.label') }}: </b>{{ $t('if.skeleton.to', { length: formatAlgorithmToArray(userIF.skeleton).length, detail: formatCycleDetail(userIF.cycleDetail) }) }}<br>
     </div>
     <div class="mb-1">
       <b>{{ $t('if.cycles.label') }}: </b>

@@ -8,6 +8,8 @@
       <dt class="col-sm-12 col-md-3">{{ $t('if.skeleton.label') }}</dt>
       <dd class="col-sm-12 col-md-9">
         <pre v-html="commentSkeleton(skeleton)"></pre>
+        <hr>
+        {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(skeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
       </dd>
       <dt class="col-sm-12 col-md-3">{{ $t('if.algs.label') }}</dt>
       <dd class="col-sm-12 col-md-9">
@@ -48,6 +50,7 @@
 
 <script>
 import Solution from '~/components/Solution'
+import { formatAlgorithmToArray } from '~/libs'
 import { cycleKeys } from '~/config/if'
 
 export default {
@@ -90,6 +93,28 @@ export default {
     }
   },
   methods: {
+    formatAlgorithmToArray,
+    formatCycleDetail(cycleDetail) {
+      const detail = []
+      cycleDetail.corner.filter(cycle => cycle.length > 1).forEach(cycle => {
+        detail.push(cycle.length + 'C')
+      })
+      const twist = cycleDetail.corner.filter(cycle => cycle.length == 1).reduce((t, cycle) => cycle.length + t, 0)
+      if (twist) {
+        detail.push(twist + 'T')
+      }
+      cycleDetail.edge.filter(cycle => cycle.length > 1).forEach(cycle => {
+        detail.push(cycle.length + 'E')
+      })
+      const flip = cycleDetail.edge.filter(cycle => cycle.length == 1).reduce((f, cycle) => cycle.length + f, 0)
+      if (flip) {
+        detail.push(flip + 'F')
+      }
+      cycleDetail.center.forEach(cycle => {
+        detail.push(cycle.length + 'X')
+      })
+      return detail.join('')
+    },
     async updateResult() {
       try {
         const result = await this.$axios.$get(`/if/${this.$route.params.hash}`, {
