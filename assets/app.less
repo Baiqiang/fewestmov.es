@@ -13,3 +13,26 @@ button {
     max-width: 1540px;
   }
 }
+.keyboard {
+  user-select: none;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin: 0 -5px;
+  .key {
+    text-align: center;
+    box-shadow: 0 0 3px -1px rgba(0, 0, 0, .3);
+    height: 40px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+    background: #fff;
+    border-bottom: 1px solid #b5b5b5;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    &.active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+}

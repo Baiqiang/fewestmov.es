@@ -35,6 +35,7 @@ module.exports = {
   plugins: [
     '~/plugins/i18n.js',
     '~/plugins/moment.js',
+    '~/plugins/touch-events.js',
   ],
   /*
   ** Nuxt.js modules

@@ -19,12 +19,13 @@
         :label="$t('if.scramble.label')"
         label-size="lg"
       >
-        <b-form-input
+        <CubeInput
           v-model="form.scramble"
           type="text"
           required
           :state="scrambleValid"
-        ></b-form-input>
+          showRUF
+        ></CubeInput>
         <b-form-text v-html="$t('if.scramble.description')" v-if="scrambleValid !== false"></b-form-text>
         <b-form-invalid-feedback :state="scrambleValid">
           {{ $t('if.scramble.invalid') }}
@@ -35,12 +36,13 @@
         :label="$t('if.skeleton.label')"
         label-size="lg"
       >
-        <b-form-textarea
+        <CubeInput
           v-model="form.skeleton"
           required
           rows="6"
           :state="skeletonValid && cycleValid"
-        ></b-form-textarea>
+          type="textarea"
+        ></CubeInput>
         <b-form-invalid-feedback :state="skeletonValid">
           {{ $t('if.skeleton.invalid') }}
         </b-form-invalid-feedback>
@@ -105,6 +107,7 @@
 <script>
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import store from 'store'
+import CubeInput from '~/components/CubeInput'
 import { formatAlgorithmToArray, removeComment } from '~/libs'
 import { maxCycles, maxSkeletonLength, maxScrambleLength, cycleKeys } from '~/config/if'
 
@@ -223,6 +226,9 @@ export default {
       }
     },
     cycleValid() {
+      if (this.cycles.total === 0) {
+        return null
+      }
       return this.cycles.total && this.cycles.total <= maxCycles
     },
     suggestAlgs() {
@@ -284,6 +290,9 @@ export default {
         store.set('if.form', form)
       }
     }
+  },
+  components: {
+    CubeInput
   }
 }
 </script>
