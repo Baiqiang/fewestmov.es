@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default function ({ isHMR, app, store, req }) {
   if (isHMR) {
     return
@@ -17,6 +19,7 @@ export default function ({ isHMR, app, store, req }) {
     if (locale) {
       store.commit('SET_LANG', locale)
       app.i18n.locale = store.state.locale
+      moment.locale(app.i18n.locale)
     }
   }
 }
