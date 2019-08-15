@@ -21,7 +21,7 @@
       </div>
       <div class="col px-0">
         <div class="key" v-touch.prevent.stop="onClose">
-          <i class="material-icons">close</i>
+          <i class="material-icons">keyboard</i>
         </div>
       </div>
     </template>
