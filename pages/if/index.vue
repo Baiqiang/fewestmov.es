@@ -108,7 +108,7 @@
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import store from 'store'
 import CubeInput from '~/components/CubeInput'
-import { formatAlgorithmToArray, removeComment } from '~/libs'
+import { formatAlgorithm, formatAlgorithmToArray, removeComment } from '~/libs'
 import { maxCycles, maxSkeletonLength, maxScrambleLength, cycleKeys } from '~/config/if'
 
 export default {
@@ -209,20 +209,24 @@ export default {
       if (!this.scrambleValid || !this.skeletonValid) {
         return {}
       }
-      const cube = new Cube()
-      cube.twist(new Algorithm(this.form.scramble))
-      cube.twist(new Algorithm(removeComment(this.form.skeleton)))
-      const bestCube = cube.getBestPlacement()
-      const corners = bestCube.getCornerCycles()
-      const edges = bestCube.getEdgeCycles()
-      const centers = centerCycleTable[bestCube.placement]
-      const parity = bestCube.hasParity()
-      return {
-        corners,
-        edges,
-        centers,
-        parity,
-        total: (centers > 1 ? 0 : parity * 3) + (corners + edges + centers) * 2
+      try {
+        const cube = new Cube()
+        cube.twist(new Algorithm(formatAlgorithm(this.form.scramble)))
+        cube.twist(new Algorithm(removeComment(this.form.skeleton)))
+        const bestCube = cube.getBestPlacement()
+        const corners = bestCube.getCornerCycles()
+        const edges = bestCube.getEdgeCycles()
+        const centers = centerCycleTable[bestCube.placement]
+        const parity = bestCube.hasParity()
+        return {
+          corners,
+          edges,
+          centers,
+          parity,
+          total: (centers > 1 ? 0 : parity * 3) + (corners + edges + centers) * 2
+        }
+      } catch (e) {
+        return {}
       }
     },
     cycleValid() {

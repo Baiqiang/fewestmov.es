@@ -127,10 +127,10 @@ export function calcMarks(skeleton, insertion) {
   return [[...skeletonMarks, ...rotations.map(r => MARKS.NONE)], insertionMarks]
 }
 
-function formatAlgorithm(string) {
+function formatAlgorithm(string, placement = 0) {
   string = removeComment(string)
   const algorithm = new Algorithm(string)
-  algorithm.clearFlags()
+  algorithm.clearFlags(placement)
   algorithm.normalize()
   return algorithm.toString()
 }

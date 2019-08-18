@@ -2,7 +2,7 @@ import express from 'express'
 import crypto from 'crypto'
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import models from '../../../db'
-import { formatAlgorithm, centerLength } from '../../../libs'
+import { formatAlgorithm, removeComment, centerLength } from '../../../libs'
 import { validAlgs, maxScrambleLength, maxSkeletonLength } from '../../../config/if'
 
 const router = express.Router()
@@ -50,8 +50,12 @@ router.post('/', async (req, res, next) => {
         message: 'SCRAMBLE_TOO_LONG',
       }
     }
+    const cube = new Cube()
+    cube.twist(new Algorithm(scramble))
+    cube.twist(new Algorithm(removeComment(skeleton)))
+    const bestCube = cube.getBestPlacement()
     try {
-      formattedSkeleton = formatAlgorithm(skeleton)
+      formattedSkeleton = formatAlgorithm(skeleton, bestCube.placement)
     } catch (e) {
       throw {
         code: 400,
@@ -111,10 +115,6 @@ router.post('/', async (req, res, next) => {
       transaction,
     })
     if (!realInsertionFinder) {
-      const cube = new Cube()
-      cube.twist(new Algorithm(scramble))
-      cube.twist(new Algorithm(formattedSkeleton))
-      const bestCube = cube.getBestPlacement()
       const cornerCycles = bestCube.getCornerCycles()
       const edgeCycles = bestCube.getEdgeCycles()
       const centerCycles = centerCycleTable[bestCube.placement]
@@ -155,6 +155,16 @@ router.post('/', async (req, res, next) => {
       res.sendStatus(500)
     }
   }
+})
+
+router.get('/latest', async (req, res, next) => {
+  const ifs = await InsertionFinder.findAll({
+    order: [
+      ['createdAt', 'DESC']
+    ],
+    limit: 10
+  })
+  res.json(await Promise.all(ifs.map(insertionFinder => insertionFinder.getInfo())))
 })
 
 router.get('/:hash', async (req, res, next) => {
