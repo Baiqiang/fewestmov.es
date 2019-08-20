@@ -23,6 +23,13 @@ export function calcMarks(skeleton, insertion) {
     if ('xyz'.indexOf(b.charAt(0)) > -1) {
       break
     }
+    // check i + 2 and j - 2
+    if (skeletonMarks[i + 2] !== MARKS.CANCELLED && skeletonMarks[i + 2] !== undefined) {
+      break
+    }
+    if (insertionMarks[j - 2] !== MARKS.CANCELLED && insertionMarks[j - 2] !== undefined) {
+      break
+    }
     const alg = new Algorithm(`${a} ${b}`)
     alg.clearFlags()
     switch (alg.twists.length) {
@@ -57,7 +64,7 @@ export function calcMarks(skeleton, insertion) {
         insertionMarks[j] = MARKS.MERGED
         {
           const swappableA = isSwappable(a, skeleton[i + 1])
-          const swappableB = isSwappable(b, skeleton[j - 1])
+          const swappableB = isSwappable(b, insertion[j - 1])
           if (!swappableA || !swappableB) {
             i = -1
             break
