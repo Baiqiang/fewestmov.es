@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import models from '../../../db'
 import { formatAlgorithm, removeComment, centerLength } from '../../../libs'
-import { validAlgs, maxScrambleLength, maxSkeletonLength } from '../../../config/if'
+import { validAlgs, maxScrambleLength, maxSkeletonLength, maxGreedy } from '../../../config/if'
 
 const router = express.Router()
 const { sequelize, InsertionFinder, RealInsertionFinder, UserInsertionFinder, Alg } = models
@@ -11,9 +11,10 @@ const { sequelize, InsertionFinder, RealInsertionFinder, UserInsertionFinder, Al
 router.post('/', async (req, res, next) => {
   const transaction = await sequelize.transaction()
   try {
-    let { scramble, skeleton, algs, name } = req.body
+    let { scramble, skeleton, algs, name, greedy } = req.body
     let formattedSkeleton
     scramble = String(scramble)
+    greedy = parseInt(greedy)
     if (scramble.length === 0) {
       throw {
         code: 400,
@@ -68,12 +69,16 @@ router.post('/', async (req, res, next) => {
         message: 'SKELETON_TOO_LONG',
       }
     }
+    if (!req.user || greedy < 0 || greedy > maxGreedy) {
+      greedy = 2
+    }
+    const greedyObj = greedy === 2 ? {} : { greedy }
     // for non formatted skeleton
-    const hash = crypto.createHash('md5').update(JSON.stringify({
+    const hash = crypto.createHash('md5').update(JSON.stringify(Object.assign({
       scramble,
       skeleton,
       algs
-    })).digest('hex')
+    }, greedyObj))).digest('hex')
     const [insertionFinder] = await InsertionFinder.findOrCreate({
       where: {
         hash,
@@ -102,11 +107,11 @@ router.post('/', async (req, res, next) => {
       }
     }
     // for formatted skeleton
-    const realHash = crypto.createHash('md5').update(JSON.stringify({
+    const realHash = crypto.createHash('md5').update(JSON.stringify(Object.assign({
       scramble,
       skeleton: formattedSkeleton,
       algs
-    })).digest('hex')
+    }, greedyObj))).digest('hex')
     let realInsertionFinder = await RealInsertionFinder.findOne({
       where: {
         hash: realHash
@@ -125,6 +130,7 @@ router.post('/', async (req, res, next) => {
         hash: realHash,
         scramble,
         skeleton: formattedSkeleton,
+        greedy,
         totalCycles,
         cornerCycles,
         edgeCycles,

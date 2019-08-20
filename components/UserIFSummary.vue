@@ -1,8 +1,9 @@
 <template>
    <b-card
       class="h-100 user-if-summary"
+      v-if="!simple"
     >
-    <b-card-title class="mb-1" v-if="!showUser">{{ userIF.name || '-' }}</b-card-title>
+    <b-card-title class="mb-1" v-if="!showUser && !simple">{{ userIF.name || '-' }}</b-card-title>
     <div class="mb-1">
       <b>{{ $t('if.scramble.label') }}: </b>{{ userIF.scramble }}
     </div>
@@ -51,6 +52,25 @@
       </template>
     </div>
   </b-card>
+  <NuxtLink
+    :to="'/if/' + userIF.hash"
+    class="if-link"
+    v-else
+  >
+    <b-card
+      class="h-100 user-if-summary"
+    >
+      <div class="mb-1">
+        <b>{{ $t('if.scramble.label') }}: </b>{{ userIF.scramble }}
+      </div>
+      <div :class="{ 'mb-1': userIF.status == 2 && userIF.result && userIF.result.fewest_moves }">
+        <b>{{ $t('if.skeleton.label') }}: </b>{{ $t('if.skeleton.to', { length: formatAlgorithmToArray(userIF.skeleton).length, detail: formatCycleDetail(userIF.cycleDetail) }) }}<br>
+      </div>
+      <div v-if="userIF.status == 2 && userIF.result && userIF.result.fewest_moves">
+        <b>{{ $t('if.fewestmoves') }}</b>: {{ userIF.result.fewest_moves }}
+      </div>
+    </b-card>
+  </NuxtLink>
 </template>
 
 <script>
@@ -61,6 +81,10 @@ export default {
   props: {
     userIF: Object,
     showUser: {
+      type: Boolean,
+      default: false,
+    },
+    simple: {
       type: Boolean,
       default: false,
     },
@@ -108,7 +132,11 @@ export default {
 </script>
 
 <style lang="less">
+.if-link:hover {
+  text-decoration: none;
+}
 .user-if-summary {
-  background-color: #fbf3e2;
+  background-color: #e4f7fa;
+  color: #000;
 }
 </style>

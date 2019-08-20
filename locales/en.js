@@ -12,6 +12,7 @@ export default {
     status: 'Status',
     yes: 'Yes',
     created_at: 'Created At',
+    loginRequired: 'Login Required',
   },
   error: {
     title: {
@@ -42,7 +43,7 @@ export default {
       invalid: 'Please check your skeleton!',
       list: [
         'WCA <a href="https://www.worldcubeassociation.org/regulations/#article-12-notation" target="_blank">notation</a>.',
-        '"()" for inverse moves. "NISS" for switching scramble. But "()" and "NISS" can\'t used at once.',
+        '"()" for inverse moves. "NISS" for switching scramble. But "()" and "NISS" can\'t be used at the same time.',
         'Any content after "//" in each line will be considered as comments.',
       ],
       to: '{length} to {detail}',
@@ -120,6 +121,10 @@ export default {
       none: 'None',
       necessary: 'Necessary',
     },
+    greedy: {
+      label: 'Greedy',
+      description: 'It\'s a number N. Let\'s say when searching insertions for each step, the minimum moves of all skeletons is M. IF will keep all skeletons whose moves equal or less than M + N moves. 0 means always best first (human mode?).'
+    },
     cycles: {
       label: 'Cycles',
       corners: 'Corners',
@@ -142,6 +147,7 @@ export default {
       no_proper: 'There\'s no proper insertion.',
     },
     fewestmoves: 'Fewest Moves',
+    duration: 'Calculation Duration',
   },
   user: {
     if: 'My IF',

@@ -1,24 +1,24 @@
 <template>
   <div>
     <dl class="row">
-      <dt class="col-sm-12 col-md-3">{{ $t('if.scramble.label') }}</dt>
-      <dd class="col-sm-12 col-md-9">
+      <dt class="col-xs-12 col-sm-3">{{ $t('if.scramble.label') }}</dt>
+      <dd class="col-xs-12 col-sm-9">
         <pre>{{ scramble }}</pre>
       </dd>
-      <dt class="col-sm-12 col-md-3">{{ $t('if.skeleton.label') }}</dt>
-      <dd class="col-sm-12 col-md-9">
+      <dt class="col-xs-12 col-sm-3">{{ $t('if.skeleton.label') }}</dt>
+      <dd class="col-xs-12 col-sm-9">
         <pre v-html="commentSkeleton(skeleton)"></pre>
         <hr>
         {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(skeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
       </dd>
-      <dt class="col-sm-12 col-md-3">{{ $t('if.algs.label') }}</dt>
-      <dd class="col-sm-12 col-md-9">
+      <dt class="col-xs-12 col-sm-3">{{ $t('if.algs.label') }}</dt>
+      <dd class="col-xs-12 col-sm-9">
         <span class="badge mr-1" :class="getBadgeClass(alg)" v-for="alg in sortedAlgs" :key="alg">
           {{ $t('if.algs.' + alg + '.label')}}
         </span>
       </dd>
-      <dt class="col-sm-12 col-md-3">{{ $t('if.cycles.label') }}</dt>
-      <dd class="col-sm-12 col-md-9">
+      <dt class="col-xs-12 col-sm-3">{{ $t('if.cycles.label') }}</dt>
+      <dd class="col-xs-12 col-sm-9">
         <dl class="row mb-0">
           <template v-for="key in cycleKeys" v-if="cycles[key]">
             <dt class="col-sm-4">{{ $t(`if.cycles.${key}`) }}</dt>
@@ -26,22 +26,26 @@
           </template>
         </dl>
       </dd>
-      <dt class="col-sm-12 col-md-3">{{ $t('common.status') }}</dt>
-      <dd class="col-sm-12 col-md-9 d-flex align-items-center justify-content-start">
+      <dt class="col-xs-12 col-sm-3">{{ $t('if.greedy.label') }}</dt>
+      <dd class="col-xs-12 col-sm-9">{{ greedy }}</dd>
+      <dt class="col-xs-12 col-sm-3">{{ $t('common.status') }}</dt>
+      <dd class="col-xs-12 col-sm-9 d-flex align-items-center justify-content-start">
         <b-spinner v-if="status == 0" variant="secondary" :label="$t('if.status.' + status)" class="mr-3"></b-spinner>
         <b-spinner v-if="status == 1" variant="warning" :label="$t('if.status.' + status)" class="mr-3"></b-spinner>
         {{ $t('if.status.' + status) }}
       </dd>
-      <dt class="col-sm-12 col-md-3" v-if="result">{{ $t('if.fewestmoves') }}</dt>
-      <dd class="col-sm-12 col-md-9" v-if="result">{{ result.fewest_moves || '-' }}</dd>
-      <dt class="col-sm-12 col-md-3" v-if="result && result.fewest_moves || status == 2">{{ $t('if.solutions.label') }}</dt>
-      <dd class="col-sm-12 col-md-9" v-if="status == 2 && !result">
+      <dt class="col-xs-12 col-sm-3" v-if="result">{{ $t('if.duration') }}</dt>
+      <dd class="col-xs-12 col-sm-9" v-if="result">{{ result.duration | duration }}</dd>
+      <dt class="col-xs-12 col-sm-3" v-if="result">{{ $t('if.fewestmoves') }}</dt>
+      <dd class="col-xs-12 col-sm-9" v-if="result">{{ result.fewest_moves || '-' }}</dd>
+      <dt class="col-xs-12 col-sm-3" v-if="result && result.fewest_moves || status == 2">{{ $t('if.solutions.label') }}</dt>
+      <dd class="col-xs-12 col-sm-9" v-if="status == 2 && !result">
         {{ $t('if.solutions.exceed') }}
       </dd>
-      <dd class="col-sm-12 col-md-9" v-if="result && !result.solutions.length">
+      <dd class="col-xs-12 col-sm-9" v-if="result && !result.solutions.length">
         {{ $t('if.solutions.no_proper') }}
       </dd>
-      <dd class="col-sm-12 col-md-9" v-if="result && result.solutions.length">
+      <dd class="col-xs-12 col-sm-9" v-if="result && result.solutions.length">
         <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" />
       </dd>
     </dl>

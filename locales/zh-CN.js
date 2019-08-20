@@ -12,6 +12,7 @@ export default {
     status: '状态',
     yes: '是',
     created_at: '创建于',
+    loginRequired: '请登录',
   },
   error: {
     title: {
@@ -120,6 +121,10 @@ export default {
       none: '全不选',
       necessary: '仅选择必要',
     },
+    greedy: {
+      label: '搜索参数',
+      description: '设置一个数字 N ，假设每次搜索得到的众多复原步骤中最短的一个步数为 M，则保留步数小于等于 M + N的复原进行下一步搜索。0 意味着永远是最优消去优先（近似人脑模式）。'
+    },
     cycles: {
       label: '循环',
       corners: '角块',
@@ -142,6 +147,7 @@ export default {
       no_proper: '找不到合适的插入',
     },
     fewestmoves: '最少步数',
+    duration: '计算耗时',
   },
   user: {
     if: '我的插入',

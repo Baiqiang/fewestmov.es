@@ -19,6 +19,11 @@ export default (sequelize, DataTypes) => {
       defaultValue: '',
       allowNull: false,
     },
+    greedy: {
+      type: DataTypes.TINYINT(1),
+      defaultValue: 2,
+      allowNull: false,
+    },
     totalCycles: {
       type:DataTypes.TINYINT,
       defaultValue: 0,
@@ -64,6 +69,12 @@ export default (sequelize, DataTypes) => {
     indexes: [
       {
         fields: ['hash'],
+      },
+      {
+        fields: ['greedy'],
+      },
+      {
+        fields: ['total_cycles'],
       },
       {
         fields: ['status'],

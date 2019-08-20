@@ -2,6 +2,7 @@ export const maxCycles = 10
 export const perPage = 60
 export const maxScrambleLength = 50
 export const maxSkeletonLength = 50
+export const maxGreedy = 6
 export const validAlgs = [
   '3CP',
   '3CP-pure',

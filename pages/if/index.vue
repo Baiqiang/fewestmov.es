@@ -69,10 +69,10 @@
         :state="algsValid"
       >
         <b-button-group>
-            <b-button variant="success" @click="checkAll">{{ $t('if.algs.all') }}</b-button>
-            <b-button variant="secondary" @click="checkNone">{{ $t('if.algs.none') }}</b-button>
-            <b-button variant="info" @click=checkNecessary>{{ $t('if.algs.necessary') }}</b-button>
-          </b-button-group>
+          <b-button variant="success" @click="checkAll">{{ $t('if.algs.all') }}</b-button>
+          <b-button variant="secondary" @click="checkNone">{{ $t('if.algs.none') }}</b-button>
+          <b-button variant="info" @click=checkNecessary>{{ $t('if.algs.necessary') }}</b-button>
+        </b-button-group>
         <b-form-group
           v-for="{ type, list } in algTypes"
           :key="type"
@@ -98,6 +98,22 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
+      <b-form-group
+        :label="$t('if.greedy.label')"
+        label-size="lg"
+        :disabled="!$auth.loggedIn"
+      >
+        <b-form-input v-model="form.greedy" type="range" min="0" :max="maxGreedy"></b-form-input>
+        <span>
+          {{ form.greedy }}
+          <NuxtLink v-if="!$auth.loggedIn" to="/login">
+            {{ $t('common.loginRequired') }}
+          </NuxtLink>
+        </span>
+        <b-form-text>{{ $t('if.greedy.description') }}</b-form-text>
+      </b-form-group>
+
+
       <b-button type="submit" variant="primary" :disabled="!(scrambleValid && skeletonValid && algsValid && cycleValid)">{{ $t('form.submit') }}</b-button>
       <b-button type="reset" variant="secondary">{{ $t('form.reset') }}</b-button>
     </b-form>
@@ -109,7 +125,7 @@ import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import store from 'store'
 import CubeInput from '~/components/CubeInput'
 import { formatAlgorithm, formatAlgorithmToArray, removeComment } from '~/libs'
-import { maxCycles, maxSkeletonLength, maxScrambleLength, cycleKeys } from '~/config/if'
+import { maxCycles, maxSkeletonLength, maxScrambleLength, maxGreedy, cycleKeys } from '~/config/if'
 
 export default {
   head() {
@@ -128,6 +144,9 @@ export default {
     const form = store.get('if.form')
     if (form) {
       Object.assign(this.form, form)
+      if (!this.$auth.loggedIn) {
+        this.form.greedy = 2
+      }
     }
   },
   data() {
@@ -136,7 +155,8 @@ export default {
         name: '',
         scramble: '',
         skeleton: '',
-        algs: []
+        algs: [],
+        greedy: 2,
       },
       algTypes: [
         {
@@ -175,6 +195,7 @@ export default {
         },
       ],
       cycleKeys,
+      maxGreedy,
     }
   },
   computed: {
