@@ -91,3 +91,21 @@ test('Cancellation case 10', t=> {
     [2, 2, 1, 0, 0, 0, 0]
   ])
 })
+test('Cancellation case 11', t=> {
+  t.deepEqual(calcMarks(
+    "R' L B2 R L' D2",
+    "U' D2 L' B U R2"
+    ), [
+    [0, 0, 0, 0, 0, 2],
+    [0, 2, 0, 0, 0, 0]
+  ])
+})
+test('Cancellation case 12', t=> {
+  t.deepEqual(calcMarks(
+    "R' L B2 L' U' D2",
+    "U L' B U R2 B"
+    ), [
+    [0, 0, 0, 0, 2, 0],
+    [2, 0, 0, 0, 0, 0]
+  ])
+})

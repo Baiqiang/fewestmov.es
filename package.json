@@ -28,6 +28,7 @@
     "@babel/preset-env": "^7.5.5",
     "@nuxtjs/auth": "^4.8.1",
     "@nuxtjs/axios": "^5.5.4",
+    "@nuxtjs/google-analytics": "^2.2.0",
     "better-queue": "^3.8.10",
     "bootstrap": "^4.1.3",
     "bootstrap-vue": "^2.0.0-rc.28",

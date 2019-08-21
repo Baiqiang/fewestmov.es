@@ -169,8 +169,8 @@ function isSameFace(a, b) {
 
 export { isSwappable, isSameFace, formatAlgorithm, formatAlgorithmToArray, removeComment }
 
-export function centerLength(placement) {
-  return placement === 3 ? 6 : placement === 2 ? 4 : [2, 8, 10].includes(placement) ? 4 : 6
+export function centerLength(centerCycles, placement) {
+  return centerCycles === 3 ? 6 : centerCycles === 2 ? 4 : [2, 8, 10].includes(placement) ? 4 : 6
 }
 
 export function algLength(alg) {

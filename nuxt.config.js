@@ -47,6 +47,9 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/auth',
+    ['@nuxtjs/google-analytics', {
+      id: config.get('ga'),
+    }],
   ],
   auth: {
     redirect: {

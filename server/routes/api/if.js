@@ -140,7 +140,7 @@ router.post('/', async (req, res, next) => {
           corner: bestCube.getCornerStatus(),
           edge: bestCube.getEdgeStatus(),
           center: centerCycles > 0 ? [{
-            length: centerLength(placement)
+            length: centerLength(centerCycles, placement)
           }] : [],
         },
         Algs: algs.map(name => ({name})),
