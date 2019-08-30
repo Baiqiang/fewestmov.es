@@ -4,12 +4,14 @@
       <dt class="col-xs-12 col-sm-3">{{ $t('if.scramble.label') }}</dt>
       <dd class="col-xs-12 col-sm-9">
         <pre>{{ scramble }}</pre>
+        <CubeExpandedView :moves="scramble" />
       </dd>
       <dt class="col-xs-12 col-sm-3">{{ $t('if.skeleton.label') }}</dt>
       <dd class="col-xs-12 col-sm-9">
         <pre v-html="commentSkeleton(skeleton)"></pre>
         <hr>
         {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(skeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
+        <CubeExpandedView :moves="`${scramble}\n${skeleton}`" best />
       </dd>
       <dt class="col-xs-12 col-sm-3">{{ $t('if.algs.label') }}</dt>
       <dd class="col-xs-12 col-sm-9">
@@ -54,6 +56,7 @@
 
 <script>
 import Solution from '~/components/Solution'
+import CubeExpandedView from '~/components/CubeExpandedView'
 import { formatAlgorithmToArray } from '~/libs'
 import { cycleKeys } from '~/config/if'
 
@@ -170,7 +173,8 @@ export default {
     }
   },
   components: {
-    Solution
+    Solution,
+    CubeExpandedView,
   }
 }
 </script>

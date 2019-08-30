@@ -26,6 +26,7 @@
           :state="scrambleValid"
           showRUF
         ></CubeInput>
+        <CubeExpandedView :moves="form.scramble" v-if="scrambleValid" />
         <b-form-text v-html="$t('if.scramble.description')" v-if="scrambleValid !== false"></b-form-text>
         <b-form-invalid-feedback :state="scrambleValid">
           {{ $t('if.scramble.invalid') }}
@@ -43,6 +44,7 @@
           :state="skeletonValid && cycleValid"
           type="textarea"
         ></CubeInput>
+        <CubeExpandedView :moves="`${form.scramble}\n${form.skeleton}`" v-if="skeletonValid" best />
         <b-form-invalid-feedback :state="skeletonValid">
           {{ $t('if.skeleton.invalid') }}
         </b-form-invalid-feedback>
@@ -124,6 +126,7 @@
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import store from 'store'
 import CubeInput from '~/components/CubeInput'
+import CubeExpandedView from '~/components/CubeExpandedView'
 import { formatAlgorithm, formatAlgorithmToArray, removeComment } from '~/libs'
 import { maxCycles, maxSkeletonLength, maxScrambleLength, maxGreedy, cycleKeys } from '~/config/if'
 
@@ -317,7 +320,8 @@ export default {
     }
   },
   components: {
-    CubeInput
+    CubeInput,
+    CubeExpandedView,
   }
 }
 </script>
