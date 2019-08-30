@@ -97,7 +97,8 @@ export default {
     scrollInput() {
       const input = this.$refs.input.$refs.input
       this.$nextTick(() => {
-        input.scrollTo(input.scrollWidth, input.scrollHeight)
+        input.scrollLeft = input.scrollWidth
+        input.scrollTop = input.scrollHeight
       })
     }
   },
