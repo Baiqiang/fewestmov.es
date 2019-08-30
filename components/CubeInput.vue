@@ -87,8 +87,10 @@ export default {
       } else {
         this.$emit('input', `${this.value} ${val}`)
       }
-      this.$refs.input.$refs.input.scrollLeft = 10000
-      this.$refs.input.$refs.input.scrollTop = 10000
+      this.$nextTick(() => {
+        this.$refs.input.$refs.input.scrollLeft = 10000
+        this.$refs.input.$refs.input.scrollTop = 10000
+      })
     },
     onBackspace() {
       this.$emit('input', this.value.replace(/(.*?)\s*(([RLUDFB]w?|[xyz])['2]?|NISS|niss|\[[rludfb]['2]?\]|.)\s*$/s, '$1'))
