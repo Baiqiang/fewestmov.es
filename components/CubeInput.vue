@@ -80,6 +80,7 @@ export default {
     onOpen() {
       this.$refs.input.blur()
       this.open = true
+      this.scrollInput()
     },
     onInput(val) {
       if (this.value === '') {
@@ -87,13 +88,17 @@ export default {
       } else {
         this.$emit('input', `${this.value} ${val}`)
       }
-      this.$nextTick(() => {
-        this.$refs.input.$refs.input.scrollLeft = 10000
-        this.$refs.input.$refs.input.scrollTop = 10000
-      })
+      this.scrollInput()
     },
     onBackspace() {
       this.$emit('input', this.value.replace(/(.*?)\s*(([RLUDFB]w?|[xyz])['2]?|NISS|niss|\[[rludfb]['2]?\]|.)\s*$/s, '$1'))
+      this.scrollInput()
+    },
+    scrollInput() {
+      const input = this.$refs.input.$refs.input
+      this.$nextTick(() => {
+        input.scrollTo(input.scrollWidth, input.scrollHeight)
+      })
     }
   },
   components: {
