@@ -23,7 +23,7 @@ export default {
         let cube = new Cube()
         cube.twist(new Algorithm(removeComment(this.moves)))
         if (this.best) {
-          cube = cube.getBestPlacement()
+          // cube = cube.getBestPlacement()
         }
         return cube.toFaceletString()
       } catch (e) {
@@ -81,6 +81,7 @@ export default {
     width: 8.33%;
     margin-top: -1px;
     margin-left: -1px;
+    transition: background-color 0.3s linear;
     &:before {
       content: "";
       padding-top: 100%;
