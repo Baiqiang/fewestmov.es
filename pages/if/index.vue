@@ -298,7 +298,8 @@ export default {
         name: '',
         scramble: '',
         skeleton: '',
-        algs: []
+        algs: [],
+        greedy: 2,
       }
     },
     checkAll() {
