@@ -9,18 +9,18 @@
       :responsive="true"
       class="text-nowrap"
     >
-      <template slot="wcaId" slot-scope="data">
+      <template #cell(wcaId)="data">
         <a :href="'https://cubingchina.com/results/person/' + data.value" target="_blank">{{ data.value }}</a>
       </template>
-      <template slot="insertions" slot-scope="data">
+      <template #cell(insertions)="data">
         <nuxt-link :to="`/admin/user/${data.item.id}/if`">
           {{ data.value }}
         </nuxt-link>
       </template>
-      <template slot="avatar" slot-scope="data">
+      <template #cell(avatar)="data">
         <b-img-lazy class="avatar" fluid :src="data.value" :alt="data.item.name"></b-img-lazy>
       </template>
-      <template slot="createdAt" slot-scope="data">
+      <template #cell(createdAt)="data">
         {{ data.value|formatTime }}
       </template>
     </b-table>
