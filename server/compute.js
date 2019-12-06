@@ -76,7 +76,7 @@ async function callIF(realIF) {
         '-s',
         '-j',
         '--json',
-        '--greedy-thresold=' + realIF.greedy,
+        '--greedy-threshold=' + realIF.greedy,
       ]
       algs.forEach(alg => {
         args.push('-a')
