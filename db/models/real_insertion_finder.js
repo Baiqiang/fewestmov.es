@@ -10,6 +10,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(32),
       allowNull: false,
     },
+    version: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+      defaultValue: '',
+    },
     scramble: {
       type: DataTypes.STRING,
       allowNull: false,

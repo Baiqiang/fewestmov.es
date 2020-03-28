@@ -1,5 +1,6 @@
 import express from 'express'
 import crypto from 'crypto'
+import config from 'config'
 import { Cube, Algorithm, centerCycleTable } from 'insertionfinder'
 import models from '../../../db'
 import { formatAlgorithm, removeComment, centerLength } from '../../../libs'
@@ -128,6 +129,7 @@ router.post('/', async (req, res, next) => {
       const totalCycles = (centerCycles > 1 ? 0 : parity * 3) + (cornerCycles + edgeCycles + centerCycles) * 2
       realInsertionFinder = await RealInsertionFinder.create({
         hash: realHash,
+        version: config.version,
         scramble,
         skeleton: formattedSkeleton,
         greedy,
@@ -186,7 +188,8 @@ router.get('/:hash', async (req, res, next) => {
     }
     res.json(await insertionFinder.getInfo())
   } catch (e) {
-    res.sendStatus(500)
+    console.log(e)
+    res.sendStatus(500).json(null)
   }
 })
 

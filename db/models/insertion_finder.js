@@ -1,7 +1,15 @@
+import compare from 'node-version-compare'
+import config from 'config'
+
 export default (sequelize, DataTypes) => {
   class InsertionFinder extends sequelize.Model {
     async getInfo() {
       const realIF = await this.getRealInsertionFinder()
+      if (compare(realIF.version, config.version) < 0) {
+        realIF.version = config.version
+        realIF.status = realIF.constructor.STATUS.WAITING
+        await realIF.save()
+      }
       const info = {
         hash: this.hash,
         scramble: realIF.scramble,

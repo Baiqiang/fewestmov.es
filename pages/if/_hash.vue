@@ -36,20 +36,22 @@
         <b-spinner v-if="status == 1" variant="warning" :label="$t('if.status.' + status)" class="mr-3"></b-spinner>
         {{ $t('if.status.' + status) }}
       </dd>
-      <dt class="col-xs-12 col-sm-3" v-if="result">{{ $t('if.duration') }}</dt>
-      <dd class="col-xs-12 col-sm-9" v-if="result">{{ result.duration | duration }}</dd>
-      <dt class="col-xs-12 col-sm-3" v-if="result">{{ $t('if.fewestmoves') }}</dt>
-      <dd class="col-xs-12 col-sm-9" v-if="result">{{ result.fewest_moves || '-' }}</dd>
-      <dt class="col-xs-12 col-sm-3" v-if="result && result.fewest_moves || status == 2">{{ $t('if.solutions.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9" v-if="status == 2 && !result">
-        {{ $t('if.solutions.exceed') }}
-      </dd>
-      <dd class="col-xs-12 col-sm-9" v-if="result && !result.solutions.length">
-        {{ $t('if.solutions.no_proper') }}
-      </dd>
-      <dd class="col-xs-12 col-sm-9" v-if="result && result.solutions.length">
-        <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" />
-      </dd>
+      <template v-if="status == 2">
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.duration') }}</dt>
+        <dd class="col-xs-12 col-sm-9">{{ result.duration | duration }}</dd>
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.fewestmoves') }}</dt>
+        <dd class="col-xs-12 col-sm-9">{{ result.fewest_moves || '-' }}</dd>
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.solutions.label') }}</dt>
+        <dd class="col-xs-12 col-sm-9" v-if="!result">
+          {{ $t('if.solutions.exceed') }}
+        </dd>
+        <dd class="col-xs-12 col-sm-9" v-else-if="!result.solutions.length">
+          {{ $t('if.solutions.no_proper') }}
+        </dd>
+        <dd class="col-xs-12 col-sm-9" v-else>
+          <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" />
+        </dd>
+      </template>
     </dl>
   </div>
 </template>
