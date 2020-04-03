@@ -24,10 +24,19 @@ export default {
   loading: '加载中...',
   description: {
     if: '这个是最少步找插入工具。',
+    sf: '这个是最少步插中层工具。',
+  },
+  index: {
+    defination: '<b>最少步</b>（或称最少步挑战、<b>FMC</b>）是选手根据给定的打乱公式，尝试用尽可能少的步数还原魔方（通常是三阶）的项目。<footer class="blockquote-footer text-right"><a href="https://www.speedsolving.com/wiki/index.php/Fewest_Moves_Challenge" target="_blank">SpeedSolving.com 维基百科</a></footer>'
+  },
+  sf: {
+    title: '插中层',
+    description: '一个利用插入中层将复原步骤变短的工具。',
   },
   if: {
     title: '找插入',
     description: '一个用于检查三阶最少步插入是否最优的实用工具。',
+    latest: '最近的插入',
     name: {
       label: '名称',
       description: '可以输入一些用以区分这条插入的文字。',

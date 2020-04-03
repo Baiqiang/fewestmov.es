@@ -8,22 +8,30 @@ import { validAlgs, maxScrambleLength, maxSkeletonLength, maxGreedy } from '../.
 
 const router = express.Router()
 const { sequelize, InsertionFinder, RealInsertionFinder, UserInsertionFinder, Alg } = models
+const TYPES = RealInsertionFinder.TYPES
 
 router.post('/', async (req, res, next) => {
   const transaction = await sequelize.transaction()
   try {
-    let { scramble, skeleton, algs, name, greedy } = req.body
+    let { type = TYPES.IF, scramble = '', skeleton, algs = [], name, greedy } = req.body
     let formattedSkeleton
     scramble = String(scramble)
+    skeleton = String(skeleton)
     greedy = parseInt(greedy)
-    if (scramble.length === 0) {
+    type = parseInt(type)
+    if (!Object.values(TYPES).includes(type)) {
+      throw {
+        code: 400,
+        message: 'INVALID_TYPE',
+      }
+    }
+    if (type === TYPES.IF && scramble.length === 0) {
       throw {
         code: 400,
         message: 'INVALID_SCRAMBLE',
       }
     }
-    skeleton = String(skeleton)
-    if (!Array.isArray(algs) || algs.length === 0) {
+    if (type === TYPES.IF && (!Array.isArray(algs) || algs.length === 0)) {
       throw {
         code: 400,
         message: 'INVALID_ALGS'
@@ -70,7 +78,7 @@ router.post('/', async (req, res, next) => {
         message: 'SKELETON_TOO_LONG',
       }
     }
-    if (!req.user || greedy < 0 || greedy > maxGreedy) {
+    if (!req.user || greedy < 0 || greedy > maxGreedy || Number.isNaN(greedy)) {
       greedy = 2
     }
     const greedyObj = greedy === 2 ? {} : { greedy }
@@ -128,6 +136,7 @@ router.post('/', async (req, res, next) => {
       const parity = bestCube.hasParity()
       const totalCycles = (centerCycles > 1 ? 0 : parity * 3) + (cornerCycles + edgeCycles + centerCycles) * 2
       realInsertionFinder = await RealInsertionFinder.create({
+        type,
         hash: realHash,
         version: config.version,
         scramble,

@@ -4,19 +4,24 @@
       v-if="!simple"
     >
     <b-card-title class="mb-1" v-if="!showUser && !simple">{{ userIF.name || '-' }}</b-card-title>
-    <div class="mb-1">
-      <b>{{ $t('if.scramble.label') }}: </b>{{ userIF.scramble }}
-    </div>
-    <div class="mb-1">
-      <b>{{ $t('if.skeleton.label') }}: </b>{{ $t('if.skeleton.to', { length: formatAlgorithmToArray(userIF.skeleton).length, detail: formatCycleDetail(userIF.cycleDetail) }) }}<br>
-    </div>
-    <div class="mb-1">
-      <b>{{ $t('if.cycles.label') }}: </b>
-      <ul class="list-unstyled pl-3 mb-0">
-        <li v-for="key in cycleKeys" v-if="userIF.cycles[key]">
-          <b>{{ $t('if.cycles.' + key) }}</b>: {{ key === 'parity' ? $t('common.yes') : userIF.cycles[key] }}
-        </li>
-      </ul>
+    <template v-if="userIF.type === 0">
+      <div class="mb-1">
+        <b>{{ $t('if.scramble.label') }}: </b>{{ userIF.scramble }}
+      </div>
+      <div class="mb-1">
+        <b>{{ $t('if.skeleton.label') }}: </b>{{ $t('if.skeleton.to', { length: formatAlgorithmToArray(userIF.skeleton).length, detail: formatCycleDetail(userIF.cycleDetail) }) }}<br>
+      </div>
+      <div class="mb-1">
+        <b>{{ $t('if.cycles.label') }}: </b>
+        <ul class="list-unstyled pl-3 mb-0">
+          <li v-for="key in cycleKeys" v-if="userIF.cycles[key]">
+            <b>{{ $t('if.cycles.' + key) }}</b>: {{ key === 'parity' ? $t('common.yes') : userIF.cycles[key] }}
+          </li>
+        </ul>
+      </div>
+    </template>
+    <div class="mb-1" v-else>
+      <b>{{ $t('if.skeleton.label') }}: </b>{{ userIF.skeleton }}
     </div>
     <div class="mb-1" v-if="userIF.status == 2 && userIF.result && userIF.result.fewest_moves">
       <b>{{ $t('if.fewestmoves') }}</b>: {{ userIF.result.fewest_moves }}
@@ -35,7 +40,7 @@
       </ul>
     </div>
     <div slot="footer">
-      <nuxt-link :to="'/if/' + userIF.hash">
+      <nuxt-link :to="link">
         <b-button variant="warning" size="sm">
           <i class="material-icons">
             link
@@ -53,7 +58,7 @@
     </div>
   </b-card>
   <NuxtLink
-    :to="'/if/' + userIF.hash"
+    :to="link"
     class="if-link"
     v-else
   >
@@ -96,6 +101,11 @@ export default {
   data() {
     return {
       cycleKeys,
+    }
+  },
+  computed: {
+    link() {
+      return `/${['if', 'sf'][this.userIF.type]}/${this.userIF.hash}`
     }
   },
   methods: {

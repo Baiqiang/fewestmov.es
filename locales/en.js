@@ -24,10 +24,19 @@ export default {
   loading: 'Loading...',
   description: {
     if: 'This is insertion finder.',
+    sf: 'This is slicey finder.',
+  },
+  index: {
+    defination: '<b>Fewest Moves</b> (or <b>F</b>ewest <b>M</b>oves <b>C</b>hallenge, <b>FMC</b>) is an event where competitors attempt to solve a puzzle (almost always the 3x3x3) in as few moves as possible, starting from a given scramble.<footer class="blockquote-footer text-right"><a href="https://www.speedsolving.com/wiki/index.php/Fewest_Moves_Challenge" target="_blank">SpeedSolving.com Wiki</a></footer>'
+  },
+  sf: {
+    title: 'Slicey Finder',
+    description: 'It\'s a useful tool to check the slicey insertions for 3x3x3 Fewest Moves.',
   },
   if: {
     title: 'Insertion Finder',
     description: 'It\'s a useful tool to check the optimal insertions for 3x3x3 Fewest Moves.',
+    latest: 'Latest IF',
     name: {
       label: 'Name',
       description: 'You can type something to identify this insertion.',

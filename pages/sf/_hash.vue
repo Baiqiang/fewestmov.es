@@ -1,35 +1,10 @@
 <template>
   <div>
     <dl class="row">
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.scramble.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">
-        <pre>{{ scramble }}</pre>
-        <CubeExpandedView :moves="scramble" />
-      </dd>
       <dt class="col-xs-12 col-sm-3">{{ $t('if.skeleton.label') }}</dt>
       <dd class="col-xs-12 col-sm-9">
-        <pre v-html="commentSkeleton(skeleton)"></pre>
-        <hr>
-        {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(skeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
-        <CubeExpandedView :moves="`${scramble}\n${skeleton}`" best />
+        <pre>{{ skeleton }}</pre>
       </dd>
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.algs.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">
-        <span class="badge mr-1" :class="getBadgeClass(alg)" v-for="alg in sortedAlgs" :key="alg">
-          {{ $t('if.algs.' + alg + '.label')}}
-        </span>
-      </dd>
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.cycles.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">
-        <dl class="row mb-0">
-          <template v-for="key in cycleKeys" v-if="cycles[key]">
-            <dt class="col-sm-4">{{ $t(`if.cycles.${key}`) }}</dt>
-            <dd class="col-sm-8 mb-0">{{ key === 'parity' ? $t('common.yes') : cycles[key] }}</dd>
-          </template>
-        </dl>
-      </dd>
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.greedy.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">{{ greedy }}</dd>
       <dt class="col-xs-12 col-sm-3">{{ $t('common.status') }}</dt>
       <dd class="col-xs-12 col-sm-9 d-flex align-items-center justify-content-start">
         <b-spinner v-if="status == 0" variant="secondary" :label="$t('if.status.' + status)" class="mr-3"></b-spinner>
@@ -65,7 +40,7 @@ import { cycleKeys } from '~/config/if'
 export default {
   head() {
     return {
-      title: [this.$t('if.title'), this.$t('title')].join(' - ')
+      title: [this.$t('sf.title'), this.$t('title')].join(' - ')
     }
   },
   mounted() {
@@ -87,8 +62,8 @@ export default {
   async asyncData({ $axios, params, error, redirect }) {
     try {
       const data = await $axios.$get(`/if/${params.hash}`)
-      if (data.type === 1) {
-        return redirect(`/sf/${params.hash}`)
+      if (data.type === 0) {
+        return redirect(`/if/${params.hash}`)
       }
       return data
     } catch (e) {

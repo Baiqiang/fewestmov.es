@@ -155,6 +155,7 @@ export default {
   data() {
     return {
       form: {
+        type: 0,
         name: '',
         scramble: '',
         skeleton: '',

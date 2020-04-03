@@ -8,6 +8,7 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-nav-item to="/if" :active="$route.name && $route.name.slice(0, 2) === 'if'">{{ $t('if.title') }}</b-nav-item>
+        <b-nav-item to="/sf" :active="$route.name && $route.name.slice(0, 2) === 'sf'">{{ $t('sf.title') }}</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown :text="currentLanguage" right class="align-self-md-center">

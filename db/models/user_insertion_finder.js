@@ -4,6 +4,7 @@ export default (sequelize, DataTypes) => {
       const insertionFinder = await this.getInsertionFinder()
       const realIF = await insertionFinder.getRealInsertionFinder()
       return {
+        type: realIF.type,
         hash: insertionFinder.hash,
         name: this.name,
         scramble: realIF.scramble,

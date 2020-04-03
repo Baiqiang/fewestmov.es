@@ -10,6 +10,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(32),
       allowNull: false,
     },
+    type: {
+      type: DataTypes.TINYINT,
+      defaultValue: 0,
+      allowNull: false,
+    },
     version: {
       type: DataTypes.STRING(32),
       allowNull: false,
@@ -76,7 +81,7 @@ export default (sequelize, DataTypes) => {
         fields: ['hash'],
       },
       {
-        fields: ['greedy'],
+        fields: ['type', 'greedy'],
       },
       {
         fields: ['total_cycles'],
@@ -90,6 +95,10 @@ export default (sequelize, DataTypes) => {
     WAITING: 0,
     COMPUTING: 1,
     FINISHED: 2
+  }
+  RealInsertionFinder.TYPES = {
+    IF: 0,
+    SF: 1
   }
   return RealInsertionFinder
 }

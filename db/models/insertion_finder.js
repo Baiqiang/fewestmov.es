@@ -11,6 +11,7 @@ export default (sequelize, DataTypes) => {
         await realIF.save()
       }
       const info = {
+        type: realIF.type,
         hash: this.hash,
         scramble: realIF.scramble,
         skeleton: this.skeleton,
