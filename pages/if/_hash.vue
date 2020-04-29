@@ -57,7 +57,7 @@
           {{ $t('if.solutions.no_proper') }}
         </dd>
         <dd class="col-xs-12 col-sm-9" v-else>
-          <template v-if="!result.solutions[0].merged_insertions.length">
+          <template v-if="!result.solutions[0].merged_insertions">
             <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" :merged="false" />
           </template>
           <template v-else>
