@@ -53,7 +53,7 @@ export default {
         {
           name: 'description',
           hid: 'description',
-          content: this.$t('description.if')
+          content: this.$t('description.sf')
         }
       ]
     }

@@ -65,11 +65,16 @@
     <b-card
       class="h-100 user-if-summary"
     >
-      <div class="mb-1">
-        <b>{{ $t('if.scramble.label') }}: </b>{{ userIF.scramble }}
-      </div>
-      <div :class="{ 'mb-1': userIF.status == 2 && userIF.result && userIF.result.fewest_moves }">
-        <b>{{ $t('if.skeleton.label') }}: </b>{{ $t('if.skeleton.to', { length: formatAlgorithmToArray(userIF.skeleton).length, detail: formatCycleDetail(userIF.cycleDetail) }) }}<br>
+      <template v-if="userIF.type === 0">
+        <div class="mb-1">
+          <b>{{ $t('if.scramble.label') }}: </b>{{ userIF.scramble }}
+        </div>
+        <div :class="{ 'mb-1': userIF.status == 2 && userIF.result && userIF.result.fewest_moves }">
+          <b>{{ $t('if.skeleton.label') }}: </b>{{ $t('if.skeleton.to', { length: formatAlgorithmToArray(userIF.skeleton).length, detail: formatCycleDetail(userIF.cycleDetail) }) }}<br>
+        </div>
+      </template>
+      <div class="mb-1" v-else>
+        <b>{{ $t('if.skeleton.label') }}: </b>{{ userIF.skeleton }}
       </div>
       <div v-if="userIF.status == 2 && userIF.result && userIF.result.fewest_moves">
         <b>{{ $t('if.fewestmoves') }}</b>: {{ userIF.result.fewest_moves }}

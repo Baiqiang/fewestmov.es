@@ -154,6 +154,8 @@ export default {
       cancellation: '消去步数',
       exceed: "你妹的，要插入的循环太多了",
       no_proper: '找不到合适的插入',
+      merged: '合并',
+      expanded: '展开',
     },
     fewestmoves: '最少步数',
     duration: '计算耗时',

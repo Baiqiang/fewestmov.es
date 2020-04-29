@@ -101,7 +101,8 @@ async function callSF(realIF) {
       const args = [
         '-ij',
         '--json',
-        '--all-algs',
+        '-a',
+        'slice',
       ]
       const output = {}
       const child = spawn('insertionfinder', args)

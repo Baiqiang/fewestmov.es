@@ -1,140 +1,152 @@
 import { Algorithm } from 'insertionfinder'
 import { perPage } from '../config/if'
 
-export function calcMarks(skeleton, insertion) {
-  if (!Array.isArray(skeleton)) {
-    skeleton = skeleton.split(' ')
+export const emojis = [
+  ['😡', '😭', '😰'],
+  ['😑', '😒', '🙄'],
+  ['😃', '😋', '😶'],
+  ['😆', '😬', '😉'],
+  ['😇', '😁', '😜'],
+  ['😮', '🤠', '😎'],
+  ['🤩', '😏', '🤗'],
+  ['😍', '🤑', '😲'],
+  ['👻', '👽', '👾'],
+  ['😱'],
+  ['😻'],
+]
+
+export function formatIFResult(data) {
+  if (data.status === 2 && data.result.solutions.length > 0) {
+    data.result.solutions.forEach(solution => {
+      const indexes = {}
+      const cancellations = []
+      const insertionSymbols = []
+      solution.insertions = solution.insertions.map(({ skeleton, insertion, insert_place: place }, index, insertions) => {
+        let formattedSkeleton = skeleton.split(' ')
+        let formattedInsertion = insertion.split(' ')
+        let nextSkeleton = insertions[index + 1] && insertions[index + 1].skeleton || solution.final_solution
+        let firstPart = formattedSkeleton.slice(0, place)
+        let lastPart = formattedSkeleton.slice(place)
+        const rotations = formattedInsertion.filter(notation => isRotation(notation))
+        const cancelled = algLength(skeleton) + formattedInsertion.length - rotations.length - algLength(nextSkeleton)
+        if (!indexes[cancelled]) {
+          indexes[cancelled] = 0
+        }
+        const insertionSymbol = emojis[cancelled] && emojis[cancelled][indexes[cancelled]++] || `@${index + 1}`
+        // calulate marks
+        const marks = calcMarks([
+          ...firstPart,
+          insertion,
+          ...lastPart
+        ])
+        applyMarks([
+          firstPart,
+          formattedInsertion,
+          lastPart
+        ], marks)
+        formattedSkeleton = [...firstPart, insertionSymbol, ...lastPart].join(' ')
+        formattedInsertion = [...formattedInsertion, `(${formattedInsertion.length - rotations.length}-${cancelled})`].join(' ')
+        cancellations.push(cancelled)
+        insertionSymbols.push(insertionSymbol)
+        return {
+          skeleton,
+          formattedSkeleton,
+          insertions: [
+            {
+              place,
+              cancelled,
+              formattedInsertion,
+              insertionSymbol
+            }
+          ]
+        }
+      })
+      if (solution.merged_insertions) {
+        solution.merged_insertions = solution.merged_insertions.map(({ skeleton, insertions }) => {
+          if (insertions.length === 0) {
+            return {
+              skeleton,
+              formattedSkeleton: skeleton,
+              insertions: []
+            }
+          }
+          const parts = []
+          let formattedSkeleton = skeleton.split(' ')
+          let i
+          for (i = 0; i < insertions.length; i++) {
+            const lastPlace = insertions[i - 1]?.insert_place || 0
+            const part = formattedSkeleton.slice(lastPlace, insertions[i].insert_place)
+            parts.push(part)
+            insertions[i].algorithms.forEach(({ order, algorithm }) => {
+              parts.push(algorithm.split(' '))
+            })
+          }
+          parts.push(formattedSkeleton.slice(insertions[i - 1].insert_place))
+          const marks = calcMarks(parts.map(part => part.join(' ')))
+          applyMarks(parts, marks)
+          formattedSkeleton = []
+          const _insertions = []
+          let j = 0
+          for (i = 0; i < insertions.length; i++) {
+            formattedSkeleton.push(parts[j++].join(' '))
+            insertions[i].algorithms.forEach(({ order }) => {
+              const formattedInsertion = parts[j++]
+              const rotations = formattedInsertion.filter(isRotation)
+              const cancelled = cancellations[order]
+              _insertions.push({
+                place: insertions[i].insert_place,
+                cancelled,
+                formattedInsertion: [...formattedInsertion, `(${formattedInsertion.length - rotations.length}-${cancelled})`].join(' '),
+                insertionSymbol: insertionSymbols[order]
+              })
+              formattedSkeleton.push(insertionSymbols[order])
+            })
+          }
+          formattedSkeleton.push(parts[j++].join(' '))
+          return {
+            skeleton,
+            formattedSkeleton: formattedSkeleton.join(' ').trim(),
+            insertions: _insertions
+          }
+        })
+      }
+    })
   }
-  if (!Array.isArray(insertion)) {
-    insertion = insertion.split(' ')
-  }
-  const rotations = skeleton.filter(twist => 'xyz'.indexOf(twist.charAt(0)) > -1)
-  if (rotations.length) {
-    skeleton = skeleton.slice(0, skeleton.length - rotations.length)
-    insertion = formatAlgorithm([...rotations, ...insertion]).split(' ').filter(a => a != '')
-  }
-  const skeletonMarks = skeleton.map(r => MARKS.NONE)
-  const insertionMarks = insertion.map(r => MARKS.NONE)
-  let i = skeleton.length - 1
-  let j = 0
-  while (i >= 0 && j < insertion.length) {
-    const a = skeleton[i]
-    const b = insertion[j]
-    if ('xyz'.indexOf(b.charAt(0)) > -1) {
-      break
-    }
-    // check i + 2 and j - 2
-    if (skeletonMarks[i + 2] !== MARKS.CANCELLED && skeletonMarks[i + 2] !== undefined) {
-      break
-    }
-    if (insertionMarks[j - 2] !== MARKS.CANCELLED && insertionMarks[j - 2] !== undefined) {
-      break
-    }
-    const alg = new Algorithm(`${a} ${b}`)
-    alg.clearFlags()
-    switch (alg.twists.length) {
-      case 0:
-        if (skeletonMarks[i + 1] !== MARKS.CANCELLED && skeletonMarks[i + 1] !== undefined) {
-          const swappableA = isSwappable(a, skeleton[i + 1])
-          if (!swappableA || skeletonMarks[i + 2] !== MARKS.CANCELLED && skeletonMarks[i + 2] !== undefined) {
-            i = -1
-            break
-          }
-        }
-        // cancelled
-        skeletonMarks[i] = MARKS.CANCELLED
-        insertionMarks[j] = MARKS.CANCELLED
-        if (skeletonMarks[i + 1] !== MARKS.CANCELLED && skeletonMarks[i + 1] !== undefined) {
-          i = -1
-          break
-        }
-        i--
-        j++
-        break
-      case 1:
-        if (skeletonMarks[i + 1] === MARKS.MERGED || skeletonMarks[i + 1] === MARKS.NONE) {
-          const swappableA = isSwappable(a, skeleton[i + 1])
-          if (!swappableA || skeletonMarks[i + 2] !== MARKS.CANCELLED && skeletonMarks[i + 2] !== undefined) {
-            i = -1
-            break
-          }
-        }
-        // merged
-        skeletonMarks[i] = MARKS.MERGED
-        insertionMarks[j] = MARKS.MERGED
-        {
-          const swappableA = isSwappable(a, skeleton[i + 1])
-          const swappableB = isSwappable(b, insertion[j - 1])
-          if (!swappableA || !swappableB) {
-            i = -1
-            break
-          }
-        }
-        i--
-        j++
-        break
-      case 2:
-        // check if swappable
-        const swappableA = isSwappable(a, skeleton[i - 1])
-        const swappableB = isSwappable(b, insertion[j + 1])
-        if (!swappableA && !swappableB) {
-          // nonthing can be cancelled
-          i = -1
-        } else if (swappableA && !swappableB) {
-          i--
-        } else if (!swappableA && swappableB) {
-          j++
-        } else {
-          const algA = new Algorithm(`${a} ${insertion[j + 1]}`)
-          const algB = new Algorithm(`${skeleton[i - 1]} ${b}`)
-          algA.clearFlags()
-          algB.clearFlags()
-          switch (algA.twists.length) {
-            case 2:
-              // nothing cancelled after swap
-              i = -1
-              break
-            case 1:
-              // merged
-              skeletonMarks[i] = MARKS.MERGED
-              insertionMarks[j + 1] = MARKS.MERGED
-              break
-            case 0:
-              // cancelled
-              skeletonMarks[i] = MARKS.CANCELLED
-              insertionMarks[j + 1] = MARKS.CANCELLED
-              break
-          }
-          switch (algB.twists.length) {
-            case 2:
-              // nothing cancelled after swap
-              i = -1
-              break
-            case 1:
-              // merged
-              skeletonMarks[i - 1] = MARKS.MERGED
-              insertionMarks[j] = MARKS.MERGED
-              break
-            case 0:
-              // cancelled
-              skeletonMarks[i - 1] = MARKS.CANCELLED
-              insertionMarks[j] = MARKS.CANCELLED
-              break
-          }
-          if (skeletonMarks[i] != MARKS.CANCELLED || skeletonMarks[i - 1] != MARKS.CANCELLED) {
-            i = -1
-            break;
-          }
-          i -= 2
-          j += 2
-        }
-        break
-    }
-  }
-  return [[...skeletonMarks, ...rotations.map(r => MARKS.NONE)], insertionMarks]
 }
 
-function formatAlgorithm(string, placement = 0) {
+export function calcMarks(alg) {
+  if (Array.isArray(alg)) {
+    alg = alg.join(' ')
+  }
+  return (new Algorithm(alg)).cancelMoves()
+}
+
+export function applyMarks(algs, marks) {
+  let k = 0
+  for (let i = 0; i < algs.length; i++) {
+    const moves = algs[i]
+    for (let j = 0; j < moves.length; j++) {
+      // skip rotations
+      if (isRotation(moves[j])) {
+        continue
+      }
+      moves[j] = applyMark(moves[j], marks[k++])
+    }
+  }
+}
+
+export function applyMark(alg, mark) {
+  switch (mark) {
+    case MARKS.MERGED:
+      return `<span class="merged-move">${alg}</span>`
+    case MARKS.CANCELLED:
+      return `<span class="cancelled-move">${alg}</span>`
+    default:
+      return alg
+  }
+}
+
+export function formatAlgorithm(string, placement = 0) {
   string = removeComment(string)
   const algorithm = new Algorithm(string)
   algorithm.clearFlags(placement)
@@ -142,11 +154,11 @@ function formatAlgorithm(string, placement = 0) {
   return algorithm.toString()
 }
 
-function formatAlgorithmToArray(string) {
+export function formatAlgorithmToArray(string) {
   return formatAlgorithm(string).split(' ').filter(a => a!='')
 }
 
-function removeComment(string) {
+export function removeComment(string) {
   if (Array.isArray(string)) {
     string = string.join(' ')
   }
@@ -155,7 +167,7 @@ function removeComment(string) {
   return string.split('\n').map(s => s.split('//')[0]).join('')
 }
 
-function isSwappable(a, b) {
+export function isSwappable(a, b) {
   if (!a || !b) {
     return false
   }
@@ -163,11 +175,13 @@ function isSwappable(a, b) {
   return alg.twists[0] >>> 3 === alg.twists[1] >>> 3
 }
 
-function isSameFace(a, b) {
+export function isSameFace(a, b) {
   return a && b && a.charAt(0) === b.charAt(0)
 }
 
-export { isSwappable, isSameFace, formatAlgorithm, formatAlgorithmToArray, removeComment }
+export function isRotation(a) {
+  return a && 'xyz'.includes(a.charAt(0))
+}
 
 export function centerLength(centerCycles, placement) {
   return centerCycles === 3 ? 6 : centerCycles === 2 ? 4 : [2, 8, 10].includes(placement) ? 4 : 6

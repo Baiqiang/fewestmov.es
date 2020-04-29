@@ -154,6 +154,8 @@ export default {
       cancellation: 'Cancellation',
       exceed: "There're too many insertions to be inserted. I don't want to do it.",
       no_proper: 'There\'s no proper insertion.',
+      merged: 'Merged',
+      expanded: 'Expanded',
     },
     fewestmoves: 'Fewest Moves',
     duration: 'Calculation Duration',

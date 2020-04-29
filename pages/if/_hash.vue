@@ -1,35 +1,43 @@
 <template>
   <div>
     <dl class="row">
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.scramble.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">
-        <pre>{{ scramble }}</pre>
-        <CubeExpandedView :moves="scramble" />
-      </dd>
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.skeleton.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">
-        <pre v-html="commentSkeleton(skeleton)"></pre>
-        <hr>
-        {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(skeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
-        <CubeExpandedView :moves="`${scramble}\n${skeleton}`" best />
-      </dd>
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.algs.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">
-        <span class="badge mr-1" :class="getBadgeClass(alg)" v-for="alg in sortedAlgs" :key="alg">
-          {{ $t('if.algs.' + alg + '.label')}}
-        </span>
-      </dd>
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.cycles.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">
-        <dl class="row mb-0">
-          <template v-for="key in cycleKeys" v-if="cycles[key]">
-            <dt class="col-sm-4">{{ $t(`if.cycles.${key}`) }}</dt>
-            <dd class="col-sm-8 mb-0">{{ key === 'parity' ? $t('common.yes') : cycles[key] }}</dd>
-          </template>
-        </dl>
-      </dd>
-      <dt class="col-xs-12 col-sm-3">{{ $t('if.greedy.label') }}</dt>
-      <dd class="col-xs-12 col-sm-9">{{ greedy }}</dd>
+      <template v-if="type === 0">
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.scramble.label') }}</dt>
+        <dd class="col-xs-12 col-sm-9">
+          <pre>{{ scramble }}</pre>
+          <CubeExpandedView :moves="scramble" />
+        </dd>
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.skeleton.label') }}</dt>
+        <dd class="col-xs-12 col-sm-9">
+          <pre v-html="commentSkeleton(skeleton)"></pre>
+          <hr>
+          {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(skeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
+          <CubeExpandedView :moves="`${scramble}\n${skeleton}`" best />
+        </dd>
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.algs.label') }}</dt>
+        <dd class="col-xs-12 col-sm-9">
+          <span class="badge mr-1" :class="getBadgeClass(alg)" v-for="alg in sortedAlgs" :key="alg">
+            {{ $t('if.algs.' + alg + '.label')}}
+          </span>
+        </dd>
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.cycles.label') }}</dt>
+        <dd class="col-xs-12 col-sm-9">
+          <dl class="row mb-0">
+            <template v-for="key in cycleKeys" v-if="cycles[key]">
+              <dt class="col-sm-4">{{ $t(`if.cycles.${key}`) }}</dt>
+              <dd class="col-sm-8 mb-0">{{ key === 'parity' ? $t('common.yes') : cycles[key] }}</dd>
+            </template>
+          </dl>
+        </dd>
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.greedy.label') }}</dt>
+        <dd class="col-xs-12 col-sm-9">{{ greedy }}</dd>
+      </template>
+      <template v-else>
+        <dt class="col-xs-12 col-sm-3">{{ $t('if.skeleton.label') }}</dt>
+        <dd class="col-xs-12 col-sm-9">
+          <pre>{{ skeleton }}</pre>
+        </dd>
+      </template>
       <dt class="col-xs-12 col-sm-3">{{ $t('common.status') }}</dt>
       <dd class="col-xs-12 col-sm-9 d-flex align-items-center justify-content-start">
         <b-spinner v-if="status == 0" variant="secondary" :label="$t('if.status.' + status)" class="mr-3"></b-spinner>
@@ -49,7 +57,19 @@
           {{ $t('if.solutions.no_proper') }}
         </dd>
         <dd class="col-xs-12 col-sm-9" v-else>
-          <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" />
+          <template v-if="!result.solutions[0].merged_insertions.length">
+            <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" :merged="false" />
+          </template>
+          <template v-else>
+            <b-tabs content-class="mt-3">
+              <b-tab :title="$t('if.solutions.merged')" active>
+                <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" />
+              </b-tab>
+              <b-tab :title="$t('if.solutions.expanded')">
+                <Solution :solution="solution" v-for="(solution, index) in result.solutions" :key="index" :merged="false" />
+              </b-tab>
+            </b-tabs>
+          </template>
         </dd>
       </template>
     </dl>
@@ -59,13 +79,18 @@
 <script>
 import Solution from '~/components/Solution'
 import CubeExpandedView from '~/components/CubeExpandedView'
-import { formatAlgorithmToArray } from '~/libs'
+import { formatAlgorithmToArray, formatIFResult } from '~/libs'
 import { cycleKeys } from '~/config/if'
+
+const routes = [
+  'if',
+  'sf'
+]
 
 export default {
   head() {
     return {
-      title: [this.$t('if.title'), this.$t('title')].join(' - ')
+      title: [this.$t(`${routes[this.type]}.title`), this.$t('title')].join(' - ')
     }
   },
   mounted() {
@@ -84,12 +109,13 @@ export default {
       cycleKeys
     }
   },
-  async asyncData({ $axios, params, error, redirect }) {
+  async asyncData({ $axios, params, error, redirect, route }) {
     try {
       const data = await $axios.$get(`/if/${params.hash}`)
-      if (data.type === 1) {
-        return redirect(`/sf/${params.hash}`)
+      if (!route.path.includes(routes[data.type])) {
+        return redirect(`/${routes[data.type]}/${params.hash}`)
       }
+      formatIFResult(data)
       return data
     } catch (e) {
       console.log(e)
@@ -129,14 +155,15 @@ export default {
     },
     async updateResult() {
       try {
-        const result = await this.$axios.$get(`/if/${this.$route.params.hash}`, {
+        const data = await this.$axios.$get(`/if/${this.$route.params.hash}`, {
           progress: false
         })
-        if (result.status !== this.status) {
-          this.status = result.status
-          this.result = result.result
+        formatIFResult(data)
+        if (data.status !== this.status) {
+          this.status = data.status
+          this.result = data.result
         }
-        if (result.status == 2) {
+        if (data.status == 2) {
           clearInterval(this.timer)
         }
       } catch (e) {
@@ -164,7 +191,6 @@ export default {
         case 'no-parity-other':
         case 'extras/no-parity-other':
           return 'badge-secondary'
-
       }
     },
     commentSkeleton(skeleton) {
