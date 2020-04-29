@@ -108,6 +108,10 @@ export default {
         label: '其他棱块',
         description: '',
       },
+      '3CP3EP': {
+        label: '三角三棱换',
+        description: '',
+      },
       parity: {
         label: 'Parity',
         description: '',

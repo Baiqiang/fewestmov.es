@@ -185,6 +185,7 @@ export default {
         {
           type: 'other',
           list: [
+            '3CP3EP',
             'parity',
             'center',
             'no-parity-other',

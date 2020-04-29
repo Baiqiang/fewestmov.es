@@ -104,6 +104,10 @@ export default {
         label: 'Edge Flips',
         description: '',
       },
+      '3CP3EP': {
+        label: '3 Corners and 3 Edges',
+        description: '',
+      },
       'E-other': {
         label: 'Other Edges',
         description: '',

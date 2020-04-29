@@ -188,6 +188,8 @@ export default {
           return 'badge-danger'
         case 'center':
           return 'badge-info'
+        case '3CP3EP':
+          return 'badge-success'
         case 'no-parity-other':
         case 'extras/no-parity-other':
           return 'badge-secondary'

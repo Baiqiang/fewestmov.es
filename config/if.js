@@ -15,6 +15,7 @@ export const validAlgs = [
   'E-other',
   'parity',
   'center',
+  '3CP3EP',
   'no-parity-other',
   'extras/parity',
   'extras/no-parity-other',
