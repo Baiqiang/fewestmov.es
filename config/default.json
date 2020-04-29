@@ -1,5 +1,8 @@
 {
-  "version": "0.4.23",
+  "version": [
+    "0.4.23",
+    "0.5.3"
+  ],
   "server": {
     "host": "localhost",
     "port": 3000,

@@ -138,7 +138,7 @@ router.post('/', async (req, res, next) => {
       realInsertionFinder = await RealInsertionFinder.create({
         type,
         hash: realHash,
-        version: config.version,
+        version: config.version[type],
         scramble,
         skeleton: formattedSkeleton,
         greedy,
