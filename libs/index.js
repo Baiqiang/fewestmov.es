@@ -62,6 +62,7 @@ export function formatIFResult(data) {
         }
       })
       if (solution.merged_insertions) {
+        let index = 0
         solution.merged_insertions = solution.merged_insertions.map(({ skeleton, insertions }) => {
           if (insertions.length === 0) {
             return {
@@ -86,22 +87,25 @@ export function formatIFResult(data) {
           applyMarks(parts, marks)
           formattedSkeleton = []
           const _insertions = []
-          let j = 0
+          let j = 0, k = 0
           for (i = 0; i < insertions.length; i++) {
             formattedSkeleton.push(parts[j++].join(' '))
             insertions[i].algorithms.forEach(({ order }) => {
               const formattedInsertion = parts[j++]
               const rotations = formattedInsertion.filter(isRotation)
-              const cancelled = cancellations[order]
+              const cancelled = cancellations[order + index]
+              const insertionSymbol = insertionSymbols[order + index]
               _insertions.push({
                 place: insertions[i].insert_place,
                 cancelled,
                 formattedInsertion: [...formattedInsertion, `(${formattedInsertion.length - rotations.length}-${cancelled})`].join(' '),
-                insertionSymbol: insertionSymbols[order]
+                insertionSymbol
               })
-              formattedSkeleton.push(insertionSymbols[order])
+              formattedSkeleton.push(insertionSymbol)
             })
+            k += insertions[i].algorithms.length
           }
+          index += k
           formattedSkeleton.push(parts[j++].join(' '))
           return {
             skeleton,
