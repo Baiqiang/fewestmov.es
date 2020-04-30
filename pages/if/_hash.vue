@@ -11,7 +11,7 @@
         <dd class="col-xs-12 col-sm-9">
           <pre v-html="commentSkeleton(skeleton)"></pre>
           <hr>
-          {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(skeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
+          {{ $t('if.skeleton.to', { length: formatAlgorithmToArray(realSkeleton).length, detail: formatCycleDetail(cycleDetail) }) }}
           <CubeExpandedView :moves="`${scramble}\n${skeleton}`" best />
         </dd>
         <dt class="col-xs-12 col-sm-3">{{ $t('if.algs.label') }}</dt>

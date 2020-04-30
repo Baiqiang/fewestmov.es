@@ -15,6 +15,7 @@ export default (sequelize, DataTypes) => {
         hash: this.hash,
         scramble: realIF.scramble,
         skeleton: this.skeleton,
+        realSkeleton: realIF.skeleton,
         greedy: realIF.greedy,
         algs: (await realIF.getAlgs()).map(alg => alg.name),
         totalCycles: realIF.totalCycles / 2,
