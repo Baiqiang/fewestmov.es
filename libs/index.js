@@ -34,11 +34,7 @@ export function formatIFResult(data) {
         }
         const insertionSymbol = emojis[cancelled] && emojis[cancelled][indexes[cancelled]++] || `@${index + 1}`
         // calulate marks
-        const marks = calcMarks([
-          ...firstPart,
-          insertion,
-          ...lastPart
-        ])
+        const marks = calcMarks(firstPart, insertion, lastPart)
         applyMarks([
           firstPart,
           formattedInsertion,
@@ -78,12 +74,12 @@ export function formatIFResult(data) {
             const lastPlace = insertions[i - 1]?.insert_place || 0
             const part = formattedSkeleton.slice(lastPlace, insertions[i].insert_place)
             parts.push(part)
-            insertions[i].algorithms.forEach(({ order, algorithm }) => {
+            insertions[i].algorithms.forEach(({ algorithm }) => {
               parts.push(algorithm.split(' '))
             })
           }
           parts.push(formattedSkeleton.slice(insertions[i - 1].insert_place))
-          const marks = calcMarks(parts.map(part => part.join(' ')))
+          const marks = calcMarks(...parts)
           applyMarks(parts, marks)
           formattedSkeleton = []
           const _insertions = []
@@ -118,11 +114,8 @@ export function formatIFResult(data) {
   }
 }
 
-export function calcMarks(alg) {
-  if (Array.isArray(alg)) {
-    alg = alg.join(' ')
-  }
-  return (new Algorithm(alg)).cancelMoves()
+export function calcMarks(...algs) {
+  return (new Algorithm(algs.map(alg => Array.isArray(alg) ? alg.join('') : alg).join(''))).cancelMoves()
 }
 
 export function applyMarks(algs, marks) {
