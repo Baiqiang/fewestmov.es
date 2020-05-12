@@ -104,6 +104,7 @@ export default {
     },
     reset() {
       this.form = {
+        type: 1,
         name: '',
         skeleton: '',
       }
